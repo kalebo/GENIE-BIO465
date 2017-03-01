@@ -8,6 +8,15 @@ source("http://depot.sagebase.org/CRAN.R")
 pkgInstall(c("synapseClient"))
 ```
 
+# Login to synapse
+
+Either call `synapseLogin()  to prompt for your username and password or put the following in ~/.synapseConfig:
+```
+[authentication]
+username: youremail@gmail.com
+password: password
+```
+
 # Get the data
 R client doesn't recursively download so here are the synapse IDs:
 ```
