@@ -1,0 +1,51 @@
+---
+title: "GENIE Data Exploration"
+author: "Kaleb Olson"
+date: "March 1, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+synapseLogin()
+```
+
+## CNA Exploration
+
+First we get the data file from synapse and read it in. Because synapse checks if the file is in the cache before downloading.
+```{r}
+cnafile <- synGet('syn7851253')
+cna <- read_tsv(cnafile@filePath)
+```
+Let's look at the structure of the tbl...
+```{r}
+str(cna)
+```
+
+Here we are looking at the count of mutations across each of the chromosomes.
+
+The X chromosome forces the column to a string so natural ordering is not followed. Also note the odd inclusion of chromosomes 23 and 24.
+```{r}
+cna %>% arrange(CHROM) %>% ggplot(aes(x=CHROM)) + geom_bar()
+```
+
+I'm not sure what we are looking at here.
+```{r}
+cna %>% ggplot(aes(x=LOC.START)) + geom_density()
+cna %>% ggplot(aes(x=LOC.END)) + geom_density()
+```
+
+Let's add a column to represent the difference between start and end in the data for each row.
+```{r}
+cna <- mutate(cna, SEDIFF = LOC.END - LOC.START)
+```
+And I'm not sure what we're looking at here.
+```{r}
+sample_n(cna, 9000) %>% ggplot(aes(y=SEDIFF, x=LOC.START)) + geom_density2d() + geom_rug()
+```
+```{r}
+cna %>% filter() %>% ggplot(aes(x=CHROM, y=SEDIFF)) + geom_boxplot()
+```
