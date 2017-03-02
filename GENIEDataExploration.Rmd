@@ -35,7 +35,8 @@ cna %>% arrange(CHROM) %>% ggplot(aes(x=CHROM)) + geom_bar()
 I'm not sure what we are looking at here.
 ```{r}
 cna %>% ggplot(aes(x=LOC.START)) + geom_density()
-cna %>% ggplot(aes(x=LOC.END)) + geom_density()
+cna %>% ggplot(aes(x=LOC.END)) + geom_density() 
+cna %>% ggplot(aes(x=LOC.START)) + geom_density() + facet_wrap(~ CHROM)
 ```
 
 Let's add a column to represent the difference between start and end in the data for each row.
@@ -47,5 +48,5 @@ And I'm not sure what we're looking at here.
 sample_n(cna, 9000) %>% ggplot(aes(y=SEDIFF, x=LOC.START)) + geom_density2d() + geom_rug()
 ```
 ```{r}
-cna %>% filter() %>% ggplot(aes(x=CHROM, y=SEDIFF)) + geom_boxplot()
+cna %>% filter() %>% ggplot(aes(x=CHROM, y=SEDIFF)) + geom_boxplot() 
 ```
