@@ -10,6 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(dplyr)
 library(magrittr)
+library(ggbiplot)
+library(readr)
+library(synapseClient)
 synapseLogin()
 ```
 
@@ -45,8 +48,28 @@ cna <- mutate(cna, SEDIFF = LOC.END - LOC.START)
 ```
 And I'm not sure what we're looking at here.
 ```{r}
-sample_n(cna, 9000) %>% ggplot(aes(y=SEDIFF, x=LOC.START)) + geom_density2d() + geom_rug()
+sample_n(cna, 9000) %>% ggplot(aes(y=SEDIFF, x=LOC.START)) + geom_density2d() + geom_rug() 
+sample_n(cna, 9000) %>% ggplot(aes(y=SEDIFF, x=LOC.START)) + geom_density2d() + geom_rug() + facet_wrap(~ CHROM)
 ```
 ```{r}
 cna %>% filter() %>% ggplot(aes(x=CHROM, y=SEDIFF)) + geom_boxplot() 
 ```
+## PCA
+Let's experiment with PCA on just the continuous variables
+```{r}
+cna.pca <- cna %>% select(LOC.START, LOC.END, NUM.MARK, SEG.MEAN, SEDIFF) %>% prcomp( center = TRUE, scale. = TRUE) 
+```
+
+When we plot the varience explained by each principle componant it doesn't have the look we really wanted... And in the summary we see that PC1 and PC2 can only explain 73% of the variance.
+```{r}
+plot(cna.pca, type="l")
+summary(cna.pca)
+```
+Plotting the PCA just for kicks anyway...
+```{r}
+cna.pca %>% ggbiplot(obs.scale = 1, var.scale = 2, ellipse = TRUE, 
+              circle = TRUE) +
+            scale_color_discrete(name = '') +
+            theme(legend.direction = 'horizontal', legend.position = 'top')
+```
+
