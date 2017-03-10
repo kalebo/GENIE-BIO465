@@ -1,0 +1,33 @@
+---
+title: "GENIECnaClinical"
+author: "Kaleb Olson"
+date: "March 10, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(ggbiplot)
+library(readr)
+library(synapseClient)
+synapseLogin()
+```
+
+## CNA and Clinical Data Exploration
+
+First we get the data file from synapse and read it in. Because synapse checks if the file is in the cache before downloading.
+```{r}
+syn.clin <- synGet('syn7851246')
+syn.cna <- synGet('syn7851245')
+cna <- read_tsv(syn.cna@filePath)
+clin <- read_tsv(syn.clin@filePath)
+```
+Here is a summary of the counts of the different types of cancer from GENIE
+
+```{r}
+summary(factor(clin$CANCER_TYPE))
+```
+
