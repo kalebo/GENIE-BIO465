@@ -43,14 +43,31 @@ cna.cst <- dcast(cna.mltd, variable ~ ...)
 colnames(cna.cst)[1] <- "SAMPLE_ID"
 ```
 
-Let's try joining the clinical and cna data.
+Let's try joining the clinical and cna data. We also get a vector of the order of HUGO names.
 ```{r}
 cnaclin <- inner_join(clin, cna.cst)
+hugosym.sorted <- sort(cna[[1]])
 ```
-Let's filter the data so only records with +2 or -2 in at least one column are listed.
+Let's make a vector mask to filter the data rows that have only records with +2 or -2 in at least one column.
 ```{r}
-
-
+registerDoParallel() # so we can use do par below
+cnaclin.posmask <- foreach(i=hugosym.sorted) %dopar% (cnaclin[[i]] == 2) %>% 
+  Reduce(`|`, .)
+cnaclin.negmask <- foreach(i=hugosym.sorted) %dopar% (cnaclin[[i]] == -2) %>%
+  Reduce(`|`, .)
 ```
+
+And now masking the data...
+```{r}
+cnaclin.pos <- cnaclin[cnaclin.posmask,]
+cnaclin.neg <- cnaclin[cnaclin.negmask,]
+```
+
+Question: are these data too reduced? Here is the number of records excluded from the main for not having extreme values. Note that there can be overlap e.g., a single record might be substracted twice from nrow if it has both -2 and +2. Thus this count is lower bound.
+```{r}
+nrow(cnaclin) - (nrow(cnaclin.neg) - nrow(cnaclin.pos))
+```
+
+
 
 
