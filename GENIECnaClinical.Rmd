@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(dplyr)
+library(reshape2)
 library(magrittr)
 library(ggbiplot)
 library(readr)
@@ -30,4 +31,26 @@ Here is a summary of the counts of the different types of cancer from GENIE
 ```{r}
 summary(factor(clin$CANCER_TYPE))
 ```
+And how many individuals vs samples? We see that the max is 4 samples per individual.
+```{r}
+clin.smplPerIndv <- as.data.frame(summary(factor(clin$PATIENT_ID)), row.names = NULL)
+```
+
+We need to reshape (melt and cast) the cna data before we can match up the SAMPLE_ID variable between cna and clin.
+```{r}
+cna.mltd <- melt(cna)
+cna.cst <- dcast(cna.mltd, variable ~ ...)
+colnames(cna.cst)[1] <- "SAMPLE_ID"
+```
+
+Let's try joining the clinical and cna data.
+```{r}
+cnaclin <- inner_join(clin, cna.cst)
+```
+Let's filter the data so only records with +2 or -2 in at least one column are listed.
+```{r}
+
+
+```
+
 
