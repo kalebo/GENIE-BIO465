@@ -2,7 +2,9 @@
 title: "GENIE Data Exploration"
 author: "Kaleb Olson"
 date: "March 1, 2017"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +18,7 @@ library(synapseClient)
 synapseLogin()
 ```
 
-## CNA Exploration
+## CNA Segment Data Exploration
 
 First we get the data file from synapse and read it in. Because synapse checks if the file is in the cache before downloading.
 ```{r}
@@ -49,12 +51,12 @@ cna <- mutate(cna, SEDIFF = LOC.END - LOC.START)
 And I'm not sure what we're looking at here.
 ```{r}
 sample_n(cna, 9000) %>% ggplot(aes(y=SEDIFF, x=LOC.START)) + geom_density2d() + geom_rug() 
-sample_n(cna, 9000) %>% ggplot(aes(y=SEDIFF, x=LOC.START)) + geom_density2d() + geom_rug() + facet_wrap(~ CHROM)
+cna %>% ggplot(aes(y=SEDIFF, x=LOC.START)) + geom_density2d() + geom_rug() + facet_wrap(~ CHROM)
 ```
 ```{r}
-cna %>% filter() %>% ggplot(aes(x=CHROM, y=SEDIFF)) + geom_boxplot() 
+cna %>% filter() %>% ggplot(aes(x=CHROM, y=SEDIFF)) + geom_boxplot() + j
 ```
-## PCA
+### PCA
 Let's experiment with PCA on just the continuous variables
 ```{r}
 cna.pca <- cna %>% select(LOC.START, LOC.END, NUM.MARK, SEG.MEAN, SEDIFF) %>% prcomp( center = TRUE, scale. = TRUE) 
@@ -67,8 +69,8 @@ summary(cna.pca)
 ```
 Plotting the PCA just for kicks anyway...
 ```{r}
-cna.pca %>% ggbiplot(obs.scale = 1, var.scale = 2, ellipse = TRUE, 
-              circle = TRUE) +
+cna.pca %>% ggbiplot(obs.scale = 1, var.scale = 2, group=cna$CHROM, ellipse = TRUE,  
+              circle = FALSE, alpha = 1/10) +
             scale_color_discrete(name = '') +
             theme(legend.direction = 'horizontal', legend.position = 'top')
 ```
