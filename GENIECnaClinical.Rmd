@@ -10,9 +10,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(dplyr)
 library(magrittr)
-library(ggbiplot)
 library(readr)
 library(synapseClient)
+library(reshape2)
+library(doParallel)
+library(iterators)
 synapseLogin()
 ```
 
@@ -30,4 +32,69 @@ Here is a summary of the counts of the different types of cancer from GENIE
 ```{r}
 summary(factor(clin$CANCER_TYPE))
 ```
+And how many individuals vs samples? We see that the max is 4 samples per individual.
+```{r}
+clin.smplPerIndv <- as.data.frame(summary(factor(clin$PATIENT_ID)), row.names = NULL)
+```
+We need to reshape (melt and cast) the cna data before we can match up the SAMPLE_ID variable between cna and clin.
+```{r}
+cna.mltd <- melt(cna)
+cna.cst <- dcast(cna.mltd, variable ~ ...)
+colnames(cna.cst)[1] <- "SAMPLE_ID"
+```
+Let's try joining the clinical and cna data. We also get a vector of the order of HUGO names.
+```{r}
+cnaclin <- inner_join(clin, cna.cst)
+hugosym.sorted <- sort(cna[[1]])
+```
+Let's make a vector mask to filter the data rows that have only records with +2 or -2 in at least one column.
+```{r}
+registerDoParallel() # so we can use do par below
+cnaclin.combined <- foreach(i= hugosym.sorted) %dopar% (cnaclin[[i]] == 2 | cnaclin[[i]] == -2) %>% Reduce(`|`, .)
+cnaclin.posmask <- foreach(i=hugosym.sorted) %dopar% (cnaclin[[i]] == 2) %>% 
+  Reduce(`|`, .)
+cnaclin.negmask <- foreach(i=hugosym.sorted) %dopar% (cnaclin[[i]] == -2) %>%
+  Reduce(`|`, .)
+```
+And now masking the data...
+```{r}
+cnaclin.comb <- cnaclin[cnaclin.combined,]
+cnaclin.pos <- cnaclin[cnaclin.posmask,]
+cnaclin.neg <- cnaclin[cnaclin.negmask,]
+```
+Question: are these data too reduced? Here is the number of records excluded from the main for not having extreme values. Note that there can be overlap e.g., a single record might be substracted twice from nrow if it has both -2 and +2. Thus this count is lower bound.
+```{r}
+nrow(cnaclin) - (nrow(cnaclin.neg) - nrow(cnaclin.pos))
+```
+This will function will help us visualize the Copy Number Data better for each gene in our Data set.  It Filters by cancer type and returns a data frame.  Data Frame holds Gene Name, Positive 2 CN Count, Negative 2 CN Count.
+
+```{r}
+copyNumber <- function(cancerType)
+{
+  filtered_Cancer <- filter(cnaclin.comb, CANCER_TYPE == cancerType)
+  filtered_Cancer_Genes <- filtered_Cancer[13:623]
+  i <- 1
+  #significant_CN <- list()     #If we wanted to store it as a List instead
+  significant_CN_DF <- data.frame(GeneName = character(), PositiveCN = double(), NegativeCN = double(),    stringsAsFactors=FALSE)
+  for(Column in filtered_Cancer_Genes)
+  {
+    geneName <- colnames(filtered_Cancer_Genes)[i]
+    positiveCNCount <- sum(Column > 1)
+    negativeCNCount <- sum(Column < -1)
+    #significant_CN[[geneName]] <- c(positiveCNCount, negativeCNCount)
+    significant_CN_DF[i,] <- c(geneName, positiveCNCount, negativeCNCount)
+    i <- i + 1
+  }  
+  return (significant_CN_DF)
+}
+cancerType <- "Breast Cancer"
+copyNumber(cancerType)
+copyNumber("Prostate Cancer")
+```
+
+
+
+
+
+
 
