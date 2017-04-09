@@ -37,20 +37,15 @@ And how many individuals vs samples? We see that the max is 4 samples per indivi
 ```{r}
 clin.smplPerIndv <- as.data.frame(summary(factor(clin$PATIENT_ID)), row.names = NULL)
 ```
-<<<<<<< HEAD
-=======
 
->>>>>>> 4b93defc4970efd63b281cc2d17dea027d687e3b
 We need to reshape (melt and cast) the cna data before we can match up the SAMPLE_ID variable between cna and clin.
 ```{r}
 cna.mltd <- melt(cna)
 cna.cst <- dcast(cna.mltd, variable ~ ...)
 colnames(cna.cst)[1] <- "SAMPLE_ID"
 ```
-<<<<<<< HEAD
-=======
 
->>>>>>> 4b93defc4970efd63b281cc2d17dea027d687e3b
+
 Let's try joining the clinical and cna data. We also get a vector of the order of HUGO names.
 ```{r}
 cnaclin <- inner_join(clin, cna.cst)
@@ -59,23 +54,20 @@ hugosym.sorted <- sort(cna[[1]])
 Let's make a vector mask to filter the data rows that have only records with +2 or -2 in at least one column.
 ```{r}
 registerDoParallel() # so we can use do par below
-<<<<<<< HEAD
 cnaclin.combined <- foreach(i= hugosym.sorted) %dopar% (cnaclin[[i]] == 2 | cnaclin[[i]] == -2) %>% Reduce(`|`, .)
-=======
->>>>>>> 4b93defc4970efd63b281cc2d17dea027d687e3b
 cnaclin.posmask <- foreach(i=hugosym.sorted) %dopar% (cnaclin[[i]] == 2) %>% 
   Reduce(`|`, .)
 cnaclin.negmask <- foreach(i=hugosym.sorted) %dopar% (cnaclin[[i]] == -2) %>%
   Reduce(`|`, .)
 ```
-<<<<<<< HEAD
+
 And now masking the data...
 ```{r}
 cnaclin.comb <- cnaclin[cnaclin.combined,]
 cnaclin.pos <- cnaclin[cnaclin.posmask,]
 cnaclin.neg <- cnaclin[cnaclin.negmask,]
 ```
-=======
+
 
 And now masking the data...
 ```{r}
@@ -83,12 +75,12 @@ cnaclin.pos <- cnaclin[cnaclin.posmask,]
 cnaclin.neg <- cnaclin[cnaclin.negmask,]
 ```
 
->>>>>>> 4b93defc4970efd63b281cc2d17dea027d687e3b
+
 Question: are these data too reduced? Here is the number of records excluded from the main for not having extreme values. Note that there can be overlap e.g., a single record might be substracted twice from nrow if it has both -2 and +2. Thus this count is lower bound.
 ```{r}
 nrow(cnaclin) - (nrow(cnaclin.neg) - nrow(cnaclin.pos))
 ```
-<<<<<<< HEAD
+
 This will function will help us visualize the Copy Number Data better for each gene in our Data set.  It Filters by cancer type and returns a data frame.  Data Frame holds Gene Name, Positive 2 CN Count, Negative 2 CN Count.
 
 ```{r}
@@ -110,15 +102,11 @@ copyNumber <- function(cancerType)
   }  
   return (significant_CN_DF)
 }
+#  Put whatever Cancer Type we are searching for in for cancer Type.  i.e. "Breast Cancer", "Prostate Cancer"
 cancerType <- "Breast Cancer"
-copyNumber(cancerType)
-copyNumber("Prostate Cancer")
+#copyNumber(cancerType)
 ```
 
-
-
-=======
->>>>>>> 4b93defc4970efd63b281cc2d17dea027d687e3b
 
 
 
