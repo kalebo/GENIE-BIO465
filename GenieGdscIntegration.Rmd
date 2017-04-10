@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+library(magrittr)
+library(ggbiplot)
+library(readr)
+library(synapseClient)
+library(doParallel)
+synapseLogin()
+```
+
+Load up our data files.
+```{r}
+syn.cna <- synGet('syn7851245')
+genie.cna <- read_tsv(syn.cna@filePath)
+gdsc.genes <- read_tsv("gdsc.geneslist")
+genie.genes <- select(genie.cna, HUGO_SYMBOL)
+```
+
+Here we find the intersection of the GDSC gene list and the GENIE gene list.
+```{r}
+intersection <- intersect(gdsc.genes, genie.genes) %>% arrange(HUGO_SYMBOL)
+```
+
