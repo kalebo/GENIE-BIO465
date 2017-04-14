@@ -1,0 +1,60 @@
+---
+title: "PipelineDevelopment"
+author: "Kaleb Olson"
+date: "April 13, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(ggbiplot)
+library(dplyr)
+library(reshape2)
+library(magrittr)
+library(readr)
+library(synapseClient)
+library(doParallel)
+synapseLogin()
+```
+
+Load all the data we want to work with.
+```{r}
+genie.filtered.cn <- readRDS("genie-filtered-cn.rds")
+gdsc.filtered.cn <- readRDS("gdsc-filtered-cn.rds")
+gdsc.filtered.cn.t <- readRDS("gdsc-filtered-cn-t.rds")
+
+celline.to.cosmicid <- readRDS("gdsc-cellline-to-cosmic-id.rds")
+screeened.compounds <- readRDS("screened-compounds.rds")
+dose.response <- readRDS("dose-response.rds")
+
+genie.clin <- readRDS("genie-clin.rds")
+intersecting.genes <- readRDS("intersecting-genes.rds")
+genie.filtered.cnclin <- readRDS("genie-filtered-cn-clin.rds")
+```
+
+Make a tree map breakdown of cancer and cancer sub-type.
+```{r}
+test.count <- genie.clin %>% group_by(CANCER_TYPE_DETAILED) %>% mutate(COUNT = n())
+png(filename="tree.png",width=1024, height=600);
+treemap(test.count, index=c("CANCER_TYPE", "CANCER_TYPE_DETAILED"), vSize = "COUNT", type="index", palette= "Reds", align.labels = list(c("center", "center"), c("right", "bottom")), title="GENIE - Breakdown by cancer and cancer sub-type", fontsize.labels=c(18,10), fontsize.title = 18);
+dev.off()
+```
+
+Example of how genie.filtered.cnclin is generated:
+```
+syn.clin <- synGet('syn7851246')
+genie.clin <- read_tsv(syn.clin@filePath)
+genie.filtered.cn.cst <- melt(genie.filtered.cn) %>% dcast(variable ~ ...)
+colnames(genie.filtered.cn.cst)[1] <- "SAMPLE_ID"
+genie.filtered.cnclin <- inner_join(genie.clin, genie.filtered.cn.cst)
+saveRDS(genie.filtered.cnclin, "genie-filtered-cn-clin.rds")
+```
+
+Here is how the transposed and trimed version of gdsc.filtered.cn was generated
+```
+gdsc.filtered.cn.t <- as.data.frame(t(gdsc.filtered.cn))[c(-2, -3, -4),]
+
+```
+
+
