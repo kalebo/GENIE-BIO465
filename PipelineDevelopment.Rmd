@@ -52,9 +52,63 @@ saveRDS(genie.filtered.cnclin, "genie-filtered-cn-clin.rds")
 ```
 
 Here is how the transposed and trimed version of gdsc.filtered.cn was generated
-```
+```{r}
 gdsc.filtered.cn.t <- as.data.frame(t(gdsc.filtered.cn))[c(-2, -3, -4),]
 
 ```
 
+```{r}
+translate <- function(quaddle) {
+  maxchar <- substr(quaddle, 1, 1)
+  max <- as.numeric(maxchar)
+  if (!is.na(max) && max >= 9) {
+    2
+  }
+  else if (!is.na(max) && max < 9) {
+    switch(maxchar,
+           "0" = -2,
+           "1" = -1,
+           "2" = 0,
+           "3" = 1,
+           "4" = 2,
+           "5" = 2,
+           "6" = 2,
+           "7" = 2,
+           "8" = 2)
+  }
+  else{
+    NA
+  }
+}
 
+gdsc.filtered.cn.trans <- apply(gdsc.filtered.cn.t, c(1,2), translate)
+```
+
+Here we check the gene EFGR (row number 138 in each dataset because we ordered genes alphabetically) to check that we get a comparable distribution of cnv values. This depends on an accurate translation of cnv data from gdsc style to genie style. The EFGR gene can be considered as a baseline because ...
+```{r}
+gdsc.efgr <- table(sapply( gdsc.filtered.cn[138, 5:ncol(gdsc.filtered.cn)],  translate))
+genie.efgr <- table(unlist(genie.filtered.cn[138, 2:ncol(genie.filtered.cn) ]))
+sapply(gdsc.efgr, function(x) x/ncol(gdsc.filtered.cn))
+sapply(genie.efgr, function(x) x/ncol(genie.filtered.cn))
+
+```
+ERBB2
+```{r}
+gdsc.efgr <- table(sapply( gdsc.filtered.cn[150, 5:ncol(gdsc.filtered.cn)],  translate))
+genie.efgr <- table(unlist(genie.filtered.cn[150, 2:ncol(genie.filtered.cn) ]))
+sapply(gdsc.efgr, function(x) x/ncol(gdsc.filtered.cn))
+sapply(genie.efgr, function(x) x/ncol(genie.filtered.cn))
+
+```
+
+Question: how many times does max not equal min in the unconverted GDSC data?
+```{r}
+maxeqmin <- function(x) {
+  max_r <- substr(x, 1,1)
+  min_r <- substr(x, 3,3)
+  max_r == min_r
+}
+
+tout <- apply(gdsc.filtered.cn.t[2:nrow(gdsc.filtered.cn.t),], c(1,2), maxeqmin)
+table(tout)
+```
