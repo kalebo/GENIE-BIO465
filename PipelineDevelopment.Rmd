@@ -109,6 +109,73 @@ maxeqmin <- function(x) {
   max_r == min_r
 }
 
+
 tout <- apply(gdsc.filtered.cn.t[2:nrow(gdsc.filtered.cn.t),], c(1,2), maxeqmin)
 table(tout)
+
 ```
+Question: how many times do we find that if the two don't match that the max is greater than 8
+```{r}
+maxneandgt8 <- function(x) {
+  quad <- unlist(strsplit(x, ","))
+  max_r <- quad[1]
+  min_r <- quad[2]
+  max_i = as.numeric(max_r)
+  
+  if (max_i != min_r){
+     max_i >= 4
+  }
+  else {
+    FALSE
+  }
+}
+
+mout <- apply(gdsc.filtered.cn.t[2:nrow(gdsc.filtered.cn.t), ], c(1,2), maxneandgt8)
+table(mout)
+```
+
+```{r}
+extrmtrans <- function(x){ 
+  quad <- unlist(strsplit(x, ","))
+  max_i <- as.numeric(quad[1])
+  min_i <- as.numeric(quad[2])
+  
+  if (max_i == 0){
+    -2
+  }
+  else if (max_i >= 8 && min_i >= 8) {
+    2
+  }
+  else {
+    0
+  }
+}
+
+xout <- apply(gdsc.filtered.cn.t[2:nrow(gdsc.filtered.cn.t), ], c(1,2), extrmtrans)
+table(xout)
+
+wipenonextr <- function(x){
+  if (x != -2 || x != 2) {
+    0
+  }
+  else {
+    x
+  }
+}
+
+sum(genie.filtered.cn[,2:ncol(genie.filtered.cn)] == -2) +
+sum(genie.filtered.cn[,2:ncol(genie.filtered.cn)] == 2)
+```
+
+Make a plot of the distribution:
+```{r}
+genie.cn.table <- table(unlist(genie.filtered.cn[,2:ncol(genie.filtered.cn)]))
+```
+```{r}
+library(scales)
+ggplot(as.data.frame(genie.cn.table)[-2,]) + geom_col(aes(x = Var1, y = Freq)) + scale_y_log10( breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x))) + labs(x="Discrete CN Level", y ="Count", title="GENIE Copy Number Distribution")
+#gdsc.cn.table <- table(unlist(genie.filtered.cn[,2:ncol(genie.filtered.cn)]))
+```
+
+
+
