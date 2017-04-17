@@ -190,4 +190,32 @@ ggplot(gdsc.cn.table) + geom_col(aes(x = cn, y = freq), fill="#B22222") + scale_
 ```
 
 
+Now we choose a drug that is has at least one record that is very low IC50. In this case #104. We filter for this drug and any record that is less than our threshold of -2 for IC50
+```{r}
+gdsc.filtered.cn.bettertrans.df <- as.data.frame(gdsc.filtered.cn.bettertrans)
+colnames(gdsc.filtered.cn.bettertrans.df) <- unlist(intersecting.genes)
+
+library(data.table)
+gdsc.filtered.cn.bettertrans.df <- setDT(gdsc.filtered.cn.bettertrans.df, keep.rownames = TRUE)[]
+colnames(gdsc.filtered.cn.bettertrans.df)[1] <- "COSMIC_ID"
+
+```
+
+Now we show a trivial example of how we are going to compare profile sets. Note that we will need to consider the positive 2 and the negative 2 cases individually.
+```{r}
+
+drug_id = 104
+drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < -2)
+profilein.2 <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
+
+drug_id = 201
+drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < -2)
+profilein.1 <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
+
+profile.104 <- apply(unlist(profilein.1 == 2), 2, function(x) sum(x)/length(x))
+
+profile.201 <-  apply(unlist(profilein.2 == 2), 2, function(x) sum(x)/length(x))
+dist(rbind(profile.201, profile.104), method = "euclidian")
+
+```
 
