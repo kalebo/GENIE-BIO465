@@ -203,7 +203,6 @@ colnames(gdsc.filtered.cn.bettertrans.df)[1] <- "COSMIC_ID"
 
 Now we show a trivial example of how we are going to compare profile sets. Note that we will need to consider the positive 2 and the negative 2 cases individually.
 ```{r}
-
 drug_id = 104
 drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < -2)
 profilein.2 <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
@@ -216,6 +215,29 @@ profile.104 <- apply(unlist(profilein.1 == 2), 2, function(x) sum(x)/length(x))
 
 profile.201 <-  apply(unlist(profilein.2 == 2), 2, function(x) sum(x)/length(x))
 dist(rbind(profile.201, profile.104), method = "euclidian")
+```
+
+We we generalize the above as functions:
+```{r}
+subsetDist <- function(set_a, set_b, cnlevel) {
+  colProp <- function(col) {sum(col)/length(col)}
+  mkProfile <- function(set, cnlevel) {apply(unlist(set == cnlevel), 2, colProp)}
+  profileDist <- function(p1, p2) {dist(rbind(p1, p2), method = "euclidian")}
+  
+  profileDist(mkProfile(set_a, cnlevel), mkProfile(set_b, 2))
+}
+
+compareDrugs <- function(drug_id1, drug_id2, threshold, cnlevel) {
+  mkRecordSet <- function(drug_id, threshold) {
+    drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < threshold)
+    records <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
+    assertthat::assert_that(length(records) >= 100)
+    records
+  }
+  
+  subsetDist(mkRecordSet(drug_id1, threshold), mkRecordSet(drug_id2, threshold), cnlevel)
+}
 
 ```
+
 
