@@ -244,7 +244,7 @@ strongestDrugs <- dose.response %>% group_by(DRUG_ID) %>% summarise(drugPower = 
 
 
 ```{r}
-# Create GDSC Drug Id CNLevel Profile Table cnLevels v(), drugIds v()
+# Create GDSC Drug Id CNLevel Profile Table, Parameters = cnLevels v(), drugIds v(), IC_50 threshold
 makeDrugCNProfileTable <- function(cnlevels, drugIDs, threshold){
   headerLine <- c("DRUG_ID", "CN_LEVEL", unlist(intersecting.genes))
   gdsc.drug.cn.profile <- data.frame(matrix(ncol = length(headerLine), nrow = 0))
