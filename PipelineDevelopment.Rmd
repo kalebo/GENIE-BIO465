@@ -240,21 +240,26 @@ compareDrugs <- function(drug_id1, drug_id2, threshold, cnlevel) {
 ```{r}
 #Drugs with most cell line response
 strongestDrugs <- dose.response %>% group_by(DRUG_ID) %>% summarise(drugPower = sum(LN_IC50 < -2)) %>% arrange(desc(drugPower))
+```
+
+
+```{r}
 # Create GDSC Drug Id CNLevel Profile Table cnLevels v(), drugIds v()
 makeDrugCNProfileTable <- function(cnlevels, drugIDs, threshold){
   headerLine <- c("DRUG_ID", "CN_LEVEL", unlist(intersecting.genes))
- gdsc.drug.cn.profile <- setNames(data.frame(matrix(ncol = length(headerLine), nrow = 0)), headerLine)
-for(drugID in drugIDs)
-{
-  for(copyLevel in cnlevels)
+  gdsc.drug.cn.profile <- data.frame(matrix(ncol = length(headerLine), nrow = 0))
+  for(drugID in drugIDs)
   {
-  drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < threshold)
-  records <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
-  profile <- mkProfile(records, copyLevel)
-  gdsc.drug.cn.profile <- rbind(drugID, copyLevel, unlist(profile))
+    for(copyLevel in cnlevels)
+    {
+    drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < threshold)
+    records <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
+    profile <- mkProfile(records, copyLevel)
+    gdsc.drug.cn.profile <- rbind(gdsc.drug.cn.profile, c(drugID, copyLevel, unlist(profile)[-1]))
+    }
   }
-}
-return (gdsc.drug.cn.profile)
+  colnames(gdsc.drug.cn.profile) <- headerLine
+  return (gdsc.drug.cn.profile)
 }
 
 ```
