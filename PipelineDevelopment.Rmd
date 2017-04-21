@@ -24,6 +24,7 @@ genie.filtered.cn <- readRDS("genie-filtered-cn.rds")
 gdsc.filtered.cn <- readRDS("gdsc-filtered-cn.rds")
 gdsc.filtered.cn.t <- readRDS("gdsc-filtered-cn-t.rds")
 DrugProfileTable <- readRDS("Drug-Profile-Table.rds")
+GenieSubsetsTable <- readRDS("genie.subsets.cn.profiles.rds")
 
 celline.to.cosmicid <- readRDS("gdsc-cellline-to-cosmic-id.rds")
 screeened.compounds <- readRDS("screened-compounds.rds")
@@ -252,8 +253,10 @@ strongestDrugs <- dose.response %>% filter(LN_IC50 < -2, AUC > .5) %>% group_by(
 
 testableDrugs <- filter(strongestDrugs, drugPower > 10, drugPower < 100)
 
-#creamTestDrugs <- filter(dose.response, dose.response$DRUG_ID %in% testableDrugs$DRUG_ID, LN_IC50 < -2, AUC > .5)
-#ct <- sum(unique(creamTestDrugs$DRUG_ID))
+creamTestDrugs <- filter(dose.response, dose.response$DRUG_ID %in% testableDrugs$DRUG_ID, LN_IC50 < -2, AUC > .5) %>% arrange(DRUG_ID, LN_IC50)
+testd <- data.table(creamTestDrugs)
+setkey(testd, DRUG_ID)
+creamTestDrugs <- testd[, lapply(.SD, function(x) head(x,10)), by = key(testd)]
 
 # How many entries are eliminated by filtering AUC
 LN_Filtered_Count <- dose.response %>% filter(LN_IC50 < -2) %>% nrow()
@@ -273,7 +276,7 @@ makeDrugCNProfileTable <- function(cnlevels, drugIDs, threshold){
   {
     for(copyLevel in cnlevels)
     {
-    drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < threshold)
+    drug.experiments <- filter(dose.response, DRUG_ID == drugID, LN_IC50 < threshold)
     records <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
     profile <- mkProfile(records, copyLevel)
     gdsc.drug.cn.profile <- rbind(gdsc.drug.cn.profile, c(drugID, copyLevel, unlist(profile)[-1]))
@@ -353,9 +356,11 @@ getTumourDrugDist <- function(sampleid, sampleTable, drugid, drugTable, cnlevels
 }
 
 generateTumourDrugMatrix <- function(tumorprofile.df, drugprofile.df, cnlevels) {
+  resultsTable <- data.frame()
   for (drugprofile in drugprofile.df){
+    
     for (tumorprofile in tumorprofile.df){
-      # I DONT WORK YET!
+      
     }
   }
 }
