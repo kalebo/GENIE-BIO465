@@ -21,7 +21,8 @@ Load all the data we want to work with.
 ```{r}
 genie.filtered.cn <- readRDS("genie-filtered-cn.rds")
 gdsc.filtered.cn <- readRDS("gdsc-filtered-cn.rds")
-gdsc.filtered.cn.t <- readRDS("gdsc-filtered-cn-t.rds") 
+gdsc.filtered.cn.t <- readRDS("gdsc-filtered-cn-t.rds")
+DrugProfileTable <- readRDS("Drug-Profile-Table.rds")
 
 celline.to.cosmicid <- readRDS("gdsc-cellline-to-cosmic-id.rds")
 screeened.compounds <- readRDS("screened-compounds.rds")
@@ -190,7 +191,7 @@ ggplot(gdsc.cn.table) + geom_col(aes(x = cn, y = freq), fill="#B22222") + scale_
 
 Now we choose a drug that is has at least one record that is very low IC50. In this case #104. We filter for this drug and any record that is less than our threshold of -2 for IC50
 ```{r}
-gdsc.filtered.cn.bettertrans.df <- as.data.frame(gdsc.filtered.cn.bettertrans).
+gdsc.filtered.cn.bettertrans.df <- as.data.frame(gdsc.filtered.cn.bettertrans)
 colnames(gdsc.filtered.cn.bettertrans.df) <- unlist(intersecting.genes)
 
 library(data.table)
@@ -241,10 +242,15 @@ This is where we rank the Strongest Drugs by LN and AUC
 #Drugs with most cell line responders.
 strongestDrugs <- dose.response %>% filter(LN_IC50 < -2, AUC > .5) %>% group_by(DRUG_ID) %>% summarise(drugPower = sum(LN_IC50 < -2)) %>% arrange(desc(drugPower))
 
+testableDrugs <- filter(strongestDrugs, drugPower > 10, drugPower < 100)
+
+#creamTestDrugs <- filter(dose.response, dose.response$DRUG_ID %in% testableDrugs$DRUG_ID, LN_IC50 < -2, AUC > .5)
+#ct <- sum(unique(creamTestDrugs$DRUG_ID))
+
 # How many entries are eliminated by filtering AUC
 LN_Filtered_Count <- dose.response %>% filter(LN_IC50 < -2) %>% nrow()
 LN_AUC_filtered_Count <- dose.response %>% filter(LN_IC50 < -2, AUC > .5) %>% nrow()
-AUC_Count <- LN_Count - AUC_filtered
+AUC_Count <- LN_Filtered_Count - LN_AUC_filtered_Count
 AUC_Count
 #filter(strongestDrugs, stronge)
 ```
@@ -268,42 +274,6 @@ makeDrugCNProfileTable <- function(cnlevels, drugIDs, threshold){
   colnames(gdsc.drug.cn.profile) <- headerLine
   return (gdsc.drug.cn.profile)
 }
-
-```
-
-Subtyping GENIE     (I think this is the older version)
-```{r}
-#transpose the genie filtered CN df
-genie.filtered.cn.t <- t(genie.filtered.cn)
-#Strip first row 
-genie.filtered.cn.t<- as.data.frame(genie.filtered.cn.t[-1,])
-# Rename Columns to be the matching genes which we know is in the same order
-colnames(genie.filtered.cn.t) <- unlist(intersecting.genes)
-#Make the rownames into values
-genie.filtered.cn.t <- setDT(genie.filtered.cn.t,keep.rownames = TRUE)[]
-# make the first column header to be SAMPLE_ID
-colnames(genie.filtered.cn.t)[1] <- "SAMPLE_ID"
-# Now its all READY!!!
-
-# check makeup of the Cancer types
-genie.cancer.types <- as.data.frame(summary(factor(genie.clin$CANCER_TYPE)))
-genie.Ages <- as.data.frame(summary(factor(genie.clin$AGE_AT_SEQ_REPORT)))
-#Use filter to manually create subtypes
-filter(genie.clin,PRIMARY_RACE == "White")
-
-filterString <- 'ETHNICITY == "Non-Spanish/non-Hispanic",PRIMARY_RACE == "White", SEX == "Male", CANCER_TYPE == "Non-Small Cell Lung Cancer"'
-
-
-filterString1 <- paste('filter(genie.clin,',filterString,")")
-  
-  
-#Example of highly specific subset
-example_subset <-filter(genie.clin,eval(as.name(filterString)))
-#Variables for subsets will follow this template:
-#genie.CANCER_TYPE.CANCER_TYPE_DETAILED.SEX.ETHNICITY.PRIMARY_RACE.AGE_AT_SEQ_REPORT
-
-test <- eval(parse(text=filterString1))
-pat <- test$PATIENT_ID
 
 ```
 
@@ -365,7 +335,7 @@ genie.Ages <- as.data.frame(summary(factor(genie.clin$AGE_AT_SEQ_REPORT)))
 #Use filter to manually create subtypes
 filter(genie.clin,PRIMARY_RACE == "White")
 
-filterString <- 'ETHNICITY == "Non-Spanish/non-Hispanic",PRIMARY_RACE == "White", SEX == "Male", CANCER_TYPE == "Non-Small Cell Lung Cancer"'
+filterString <- 'ETHNICITY == "Non-Spanish/non-Hispanic", PRIMARY_RACE == "White", SEX == "Male", CANCER_TYPE == "Non-Small Cell Lung Cancer"'
 
 
 filterString1 <- paste('filter(genie.clin,',filterString,")")
