@@ -384,6 +384,30 @@ makeGenieSubsetProfile <- function(filterString, cnlevel){
 
 ```
 
+Make Profiles from the generated Filter Strings
+```{r}
+#genieProfiles <-data.frame()
+headerLine <- c("FILTER_ID", "CN_LEVEL", unlist(intersecting.genes))
+makeGenieProfileTable <- function(cnlevels,filterIDs){
+  headerLine <- c("FILTER_ID", "CN_LEVEL", unlist(intersecting.genes))
+  genie.subset.cn.profiles <- (data.frame(matrix(ncol = length(headerLine),nrow =0)))
+  for (filter_id in filterIDs){
+    for (copylevel in cnlevels){
+      print(filter_id)
+      subsetFilter <- filter(filterStrings,ID == filter_id)
+      #print(subsetFilter[,2])
+      genieProfile<-makeGenieSubsetProfile(subsetFilter[,2],copylevel)
+      #make row
+      genie.subset.cn.profiles <- rbind(genie.subset.cn.profiles,c(filter_id,copylevel,unlist(genieProfile)[-1]))
+    
+    }
+      #print(i)
+  }
+  colnames(genie.subset.cn.profiles) <- headerLine
+  genie.subset.cn.profiles
+}
+```
+
 Generate DataFrame of FilterStrings and their ID
 ```{r}
 genie.cancer.types <- setDT(genie.cancer.types,keep.rownames = TRUE)[]
@@ -393,6 +417,10 @@ cancer_types <- filter(genie.cancer.types, Count > 500) %>% arrange(desc(Count))
 cancer_types <- c(cancer_types[,1])
 
 #cancer type detailed vector
+
+top10cancers.clin <- filter(genie.clin, CANCER_TYPE %in% cancer_types)
+top10detailed <- as.data.frame(summary(factor(top10cancers.clin$CANCER_TYPE_DETAILED)))
+top10detailed <- setDT(top10detailed,keep.rownames = TRUE)
 colnames(top10detailed)[2] <- "Count"
 colnames(top10detailed)[1] <- "CANCER_TYPE_DETAILED"
 detailed_cancer <- arrange(top10detailed, desc(Count))
@@ -405,11 +433,14 @@ sexes<- c("Male","Female")
 #races vector
 races <- c("White", "Black", "Asian")
 
+#copy levels vector
+cnlevels <- c(-2,-1,0,1,2)
+
 ```
 
 ```{r}
 
-filterStrings <- data.frame(ID= c(1:10000),
+filterStrings <- data.frame(ID= c(1:66),
                  FilterString = c(""))
 generateFilters <- function(cancers=NA, cancer_subtypes=NA, sexes=NA, races=NA, ages= NA){
   results <- c()
@@ -502,4 +533,24 @@ singleFilterSet <- function(cancer=NA, cancer_subtype=NA, sex=NA, race=NA, age= 
   result
 }
 
+```
+
+Make map of cancer - subtypes of that cancer
+```{r}
+
+#t <- filter(genie.clin, genie.clin$CANCER_TYPE == "Breast Cancer")
+#breastCancerSubtypes <- summary(factor(t$CANCER_TYPE_DETAILED))
+cancerPairedWithSubtypes <- new.env()
+for (cancer in cancer_types){
+  t <- filter(genie.clin,genie.clin$CANCER_TYPE == cancer)
+  #print(cancer)
+  name <- paste(cancer,"Subtypes")
+  name <- gsub(" ","",name)
+  subtypes <- summary(factor(t$CANCER_TYPE_DETAILED))
+  #print(class(name))
+  print(cancer)
+  
+  cancerPairedWithSubtypes[[name]] <- subtypes[subtypes >25]
+
+}
 ```
