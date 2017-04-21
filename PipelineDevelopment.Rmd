@@ -33,6 +33,9 @@ dose.response <- readRDS("dose-response.rds")
 genie.clin <- readRDS("genie-clin.rds")
 intersecting.genes <- readRDS("intersecting-genes.rds")
 genie.filtered.cnclin <- readRDS("genie-filtered-cn-clin.rds")
+
+genie.subsets.cn.profiles <- readRDS("genie.subsets.cn.profiles.rds")
+gdsc.subsets.cn.profiles <- readRDS("Drug-Profile-Table.rds")
 ```
 
 Make a tree map breakdown of cancer and cancer sub-type.
@@ -288,6 +291,11 @@ makeDrugCNProfileTable <- function(cnlevels, drugIDs, threshold){
 
 ```
 
+Generate GDSC drug profile table
+```{r}
+gdsc.subsets.cn.profiles <- makeDrugCNProfileTable(c(-2, -1, 1, 2), testableDrugs$DRUG_ID, -2)
+```
+
 
 Function to generate the genie subsets as well as generate the CN Profiles
 ```{r}
@@ -323,7 +331,7 @@ ids <- arrange(dose.response, LN_IC50)$DRUG_ID
 trt<- function(id) {which.max((mkProfile(mkRecordSet(id, 2), -2)))}
 sapply(unlist(ids[1:50]), trt)
 ```
-Let's try plotting above in a faceted graph
+Let's try plotting above.
 ```{r}
 #install.packages("ggrepel") 
 library("ggrepel")
@@ -339,28 +347,46 @@ plotDrug <- function(id) {
   name <- select(filter(screeened.compounds, `Drug ID` == id), `Drug Name`) 
   ggplot(profile, aes(x=GENE, y=SCORE)) + scale_y_log10() + geom_point() + geom_text_repel(data= subset(profile, SCORE > 0.001), aes(label=GENE), size = 3) + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank()) + annotation_logticks(side="l") + labs(title = paste(name ," (", id, ") ", "CNV profile", sep=""))
 }
+```
 
+```{r}
+
+plotFilteredSubset <- function(id) {
+  # NOT WORKING YET
+  profile <- as.data.frame(filter(genie.subsets.cn.profiles, FILTER_ID == id)[,c(-1, -2)])
+  colnames(profile) <- "SCORE"
+  res <- tibble::rownames_to_column(res, "GENE")
+  
+  name <- "TODO"
+  ggplot(profile, aes(x=GENE, y=SCORE)) + scale_y_log10() + geom_point() + geom_text_repel(data= subset(profile, SCORE > 0.001), aes(label=GENE), size = 3) + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank()) + annotation_logticks(side="l") + labs(title = paste(name ," (", id, ") ", "CNV profile", sep=""))
+}
 
 
 ```
 
 Here is the function that will get the distance from each GENIE tumour subset to each GDSC drug subset.
 ```{r}
-getTumourDrugDist <- function(sampleid, sampleTable, drugid, drugTable, cnlevels){
+getTumourDrugDist <- function(subsetid, subsetTable, drugid, drugTable, cnlevels){
   totalDist = 0
   for (level in cnlevels) {
-    sampleprofile <- filter(sampleTable, SAMPLE_ID == sampleid, CN_LEVEL == level)[,c(-1, -2)]
-    drugprofile <- filter(drugTable, DRUG_ID == drugid, CN_LEVEL == level)[,c(-1, -2)]
-    totalDist <- totalDist + profileDist(sampleprofile, drugprofile)
+    subsetprofile <- unlist(filter(subsetTable, FILTER_ID == subsetid, CN_LEVEL == level)[,c(-1, -2)])
+    drugprofile <- unlist(filter(drugTable, DRUG_ID == drugid, CN_LEVEL == level)[,c(-1, -2)])
+    totalDist <- totalDist + profileDist(subsetprofile, drugprofile)
   }
+  totalDist
 }
 
-generateTumourDrugMatrix <- function(tumorprofile.df, drugprofile.df, cnlevels) {
-  resultsTable <- data.frame()
-  for (drugprofile in drugprofile.df){
-    
-    for (tumorprofile in tumorprofile.df){
-      
+
+
+rankDrugsBySubset <- function(subsetid, cnlevels) {
+  sapply(unique(gdsc.subsets.cn.profiles$DRUG_ID), getTumourDrugDist, subsetid = subsetid, subsetTable = genie.subsets.cn.profiles, drugTable = gdsc.subsets.cn.profiles, cnlevels = cnlevels)
+}
+
+generateTumourDrugMatrix <- function(subsetprofile.df, drugprofile.df, cnlevels) {
+  
+  for (drugprofile in drugprofile.df$DRUG_ID){
+    for (subsetprofile in subsetprofile.df$FILTER_ID){
+
     }
   }
 }
