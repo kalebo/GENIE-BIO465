@@ -14,6 +14,7 @@ library(magrittr)
 library(readr)
 library(synapseClient)
 library(doParallel)
+library(tidyverse)
 synapseLogin()
 ```
 
@@ -218,9 +219,16 @@ dist(rbind(profile.201, profile.104), method = "euclidian")
 We generalize the above as functions:
 ```{r}
 colProp <- function(col) {sum(col)/length(col)}
-mkProfile <- function(set, cnlevel) {apply(unlist(set == cnlevel), 2, colProp)}
+
+mkProfile <- function(set, cnlevel) {
+  props <- apply(unlist(set == cnlevel), 2, colProp)
+  props <- props - mean(props)
+  props
+}
+
+profileDist <- function(p1, p2) {dist(rbind(p1, p2), method = "euclidian")}
+
 subsetDist <- function(set_a, set_b, cnlevel) {
-  profileDist <- function(p1, p2) {dist(rbind(p1, p2), method = "euclidian")}
   profileDist(mkProfile(set_a, cnlevel), mkProfile(set_b, cnlevel))
 }
 
@@ -310,8 +318,51 @@ Where we checked to see if CDKN2B occurred most frequently as max gene.
 ```{r}
 ids <- arrange(dose.response, LN_IC50)$DRUG_ID
 trt<- function(id) {which.max((mkProfile(mkRecordSet(id, 2), -2)))}
-sapply(unlist(ids[1:15]), trt)
+sapply(unlist(ids[1:50]), trt)
 ```
+Let's try plotting above in a faceted graph
+```{r}
+#install.packages("ggrepel") 
+library("ggrepel")
+profbyid <- function(id) {
+  res <- as.data.frame(mkProfile(mkRecordSet(id, 2), -2))
+  colnames(res) <- "SCORE"
+  res <- tibble::rownames_to_column(res, "GENE")
+  res
+}
+
+plotDrug <- function(id) {
+  profile <- profbyid(id)
+  name <- select(filter(screeened.compounds, `Drug ID` == id), `Drug Name`) 
+  ggplot(profile, aes(x=GENE, y=SCORE)) + scale_y_log10() + geom_point() + geom_text_repel(data= subset(profile, SCORE > 0.001), aes(label=GENE), size = 3) + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank()) + annotation_logticks(side="l") + labs(title = paste(name ," (", id, ") ", "CNV profile", sep=""))
+}
+
+
+
+```
+
+Here is the function that will get the distance from each GENIE tumour subset to each GDSC drug subset.
+```{r}
+getTumourDrugDist <- function(sampleid, sampleTable, drugid, drugTable, cnlevels){
+  totalDist = 0
+  for (level in cnlevels) {
+    sampleprofile <- filter(sampleTable, SAMPLE_ID == sampleid, CN_LEVEL == level)[,c(-1, -2)]
+    drugprofile <- filter(drugTable, DRUG_ID == drugid, CN_LEVEL == level)[,c(-1, -2)]
+    totalDist <- totalDist + profileDist(sampleprofile, drugprofile)
+  }
+}
+
+generateTumourDrugMatrix <- function(tumorprofile.df, drugprofile.df, cnlevels) {
+  for (drugprofile in drugprofile.df){
+    for (tumorprofile in tumorprofile.df){
+      # I DONT WORK YET!
+    }
+  }
+}
+
+```
+
+
 
 
 
