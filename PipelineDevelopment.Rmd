@@ -15,6 +15,10 @@ library(readr)
 library(synapseClient)
 library(doParallel)
 library(tidyverse)
+```
+
+
+```{r}
 synapseLogin()
 ```
 
@@ -34,6 +38,7 @@ genie.filtered.cnclin <- readRDS("genie-filtered-cn-clin.rds")
 
 genie.subsets.cn.profiles <- readRDS("genie.subsets.cn.profiles.rds")
 gdsc.subsets.cn.profiles <- readRDS("Drug-Profile-Table.rds")
+genie.subsets2060.cn.profiles <- readRDS("latest.genie.subsets.cn.profile.rds")
 ```
 
 Make a tree map breakdown of cancer and cancer sub-type.
@@ -304,9 +309,12 @@ makeGenieSubsetProfile <- function(filterString, cnlevel){
   subsetClinical <- eval(parse(text=filterString1))
   records <- filter(genie.filtered.cn.t, SAMPLE_ID %in% subsetClinical$SAMPLE_ID)
   #only subsets with more than 100 samples are valid
-  assertthat::assert_that(length(records) >= 100)
+  if (length(records)){
+    return(NA)
+  }else{
   #generate profile and return it
-  mkProfile(records, cnlevel)
+    return(mkProfile(records, cnlevel))
+  }
 }
 
 ```
@@ -418,26 +426,6 @@ genie.filtered.cn.t <- setDT(genie.filtered.cn.t,keep.rownames = TRUE)[]
 colnames(genie.filtered.cn.t)[1] <- "SAMPLE_ID"
 # Now its all READY!!!
 
-# check makeup of the Cancer types
-genie.cancer.types <- as.data.frame(summary(factor(genie.clin$CANCER_TYPE)))
-genie.Ages <- as.data.frame(summary(factor(genie.clin$AGE_AT_SEQ_REPORT)))
-#Use filter to manually create subtypes
-filter(genie.clin,PRIMARY_RACE == "White")
-
-filterString <- 'ETHNICITY == "Non-Spanish/non-Hispanic", PRIMARY_RACE == "White", SEX == "Male", CANCER_TYPE == "Non-Small Cell Lung Cancer"'
-
-
-filterString1 <- paste('filter(genie.clin,',filterString,")")
-  
-  
-#Example of highly specific subset
-example_subset <-filter(genie.clin,eval(as.name(filterString)))
-#Variables for subsets will follow this template:
-#genie.CANCER_TYPE.CANCER_TYPE_DETAILED.SEX.ETHNICITY.PRIMARY_RACE.AGE_AT_SEQ_REPORT
-
-test <- eval(parse(text=filterString1))
-pat <- test$PATIENT_ID
-
 ```
 
 
@@ -457,17 +445,19 @@ makeGenieSubsetProfile <- function(filterString, cnlevel){
   #only subsets with more than 100 samples are valid
   #print("Grabbed Records")
   #print(nrow(records))
-  if (nrow(records) < 100){
+  if (nrow(records) < 25){
     return(NA)
   }
+  else{
  # assertthat::assert_that(nrow(records) >= 100){return NULL}
-  print("We have more than 100 records")
-  numValidFilters<-numValidFilters+1
-  i<-i+1
+  #print("We have more than 100 records")
+  #numValidFilters<-numValidFilters+1
+  #i<-i+1
   #print(numValidFilters)
   #print(i)
   #generate profile and return it
-  mkProfile(records, cnlevel)
+    return(mkProfile(records, cnlevel))
+  }
 }
 
 
@@ -475,20 +465,21 @@ makeGenieSubsetProfile <- function(filterString, cnlevel){
 
 Make Profiles from the generated Filter Strings
 ```{r}
-#genieProfiles <-data.frame()
 headerLine <- c("FILTER_ID", "CN_LEVEL", unlist(intersecting.genes))
-makeGenieProfileTable <- function(cnlevels,filterIDs){
+makeGenieProfileTable <- function(cnlevels,filtersDF){
   headerLine <- c("FILTER_ID", "CN_LEVEL", unlist(intersecting.genes))
   genie.subset.cn.profiles <- (data.frame(matrix(ncol = length(headerLine),nrow =0)))
-  for (filter_id in filterIDs){
+  for (filter_id in filtersDF$ID){
     for (copylevel in cnlevels){
-      print(filter_id)
-      subsetFilter <- filter(filterStrings,ID == filter_id)
+      #print(filter_id)
+      subsetFilter <- filter(filtersDF,ID == filter_id)
       #print(subsetFilter[,2])
       genieProfile<-makeGenieSubsetProfile(subsetFilter[,2],copylevel)
+      #print(is.na(genieProfile))
       #make row
-      genie.subset.cn.profiles <- rbind(genie.subset.cn.profiles,c(filter_id,copylevel,unlist(genieProfile)[-1]))
-    
+      if(!is.na(genieProfile)){
+        genie.subset.cn.profiles <- rbind(genie.subset.cn.profiles,c(filter_id,copylevel,unlist(genieProfile)[-1]))
+      }
     }
       #print(i)
   }
@@ -497,12 +488,17 @@ makeGenieProfileTable <- function(cnlevels,filterIDs){
 }
 ```
 
+```{r}
+genie.subsets1560.cn.profiles <- makeGenieProfileTable(cnlevels = cnlevels,filterIDs = c(1:1560))
+genie.subset.cn.profiles <- makeGenieProfileTable(cnlevels,latestFilters2)
+```
+
 Generate DataFrame of FilterStrings and their ID
 ```{r}
 genie.cancer.types <- setDT(genie.cancer.types,keep.rownames = TRUE)[]
 colnames(genie.cancer.types)[2] <- "Count"
 
-cancer_types <- filter(genie.cancer.types, Count > 500) %>% arrange(desc(Count))
+cancer_types <- filter(genie.cancer.types, Count > 150) %>% arrange(desc(Count))
 cancer_types <- c(cancer_types[,1])
 
 #cancer type detailed vector
@@ -523,66 +519,35 @@ sexes<- c("Male","Female")
 races <- c("White", "Black", "Asian")
 
 #copy levels vector
-cnlevels <- c(-2,-1,0,1,2)
+cnlevels <- c(-2,-1,1,2)
 
+ages <- list(list(0,18),list(19,30),list(31,40),list(19,40))
+ages19_30<-list(list(19,30))
+ages31_40<-list(list(31,40))
+ages19_40 <-list(list(19,40))
 ```
 
-```{r}
 
-filterStrings <- data.frame(ID= c(1:66),
-                 FilterString = c(""))
-generateFilters <- function(cancers=NA, cancer_subtypes=NA, sexes=NA, races=NA, ages= NA){
-  results <- c()
-  #sapply(cancers,singleFilterSet)
-  results <- append(results,as.character(sapply(cancers,singleFilterSet)))
-  
-  if (!is.na(cancers)){
-    for (cancer in cancers){
-      for (sex in sexes){
-        results <- append(results,singleFilterSet(cancer,sex=sex))
-      }
-    }
-  }
-  
-  if (!is.na(races)){
-    for (cancer in cancers){
-      for (race in races){
-        results <- append(results,singleFilterSet(cancer,race = race))
-      }
-    }
-  }
-  
-  if (!is.na(cancer_subtypes)){
-    for (cancer in cancers){
-      for (cancer_subtype in cancer_subtypes){
-        results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype))
-      }
-    }
-  }
-  
-  if (!is.na(ages)){
-    for (cancer in cancers){
-      for (age in ages){
-        results <- append(results,singleFilterSet(cancer,age = age))
-      }
-    }
-  }
-  results
-  
+
+Generate and Clean up results from generateFilters function
+```{r}
+makeFilters <- function(cancers = NA, cancer_subtypes=NA, sexes = NA, races = NA, ages = NA ){
+  filterStringsTestAll <- as.data.frame(generateAllFilters(cancers,cancer_subtypes,sexes,races,ages))
+  filterStringsTestAll <- setDT(filterStringsTestAll,keep.rownames = TRUE)[]
+  colnames(filterStringsTestAll)[1] <- "ID"
+  colnames(filterStringsTestAll)[2] <- "FilterString"
+  filterStringsTestAll$ID <- as.integer(filterStringsTestAll$ID)
+  filterStringsTestAll$FilterString <- as.character(filterStringsTestAll$FilterString)
+  return(filterStringsTestAll)
 }
 
 ```
 
-Generate and Clean up results from generateFilters function
+
 ```{r}
-filterStrings <- as.data.frame(generateFilters(cancer_types,sexes = sexes,races = races))
-filterStrings <- setDT(filterStrings,keep.rownames = TRUE)[]
-colnames(filterStrings)[1] <- "ID"
-colnames(filterStrings)[2] <- "FilterString"
-
-filterStrings[] <- lapply(filterStrings[],as.character)
+latestFilters <- makeFilters(cancer_types,cancerPairedWithSubtypes,sexes,races,ages)
+latestFilters2 <- makeFilters(cancer_types,cancerPairedWithSubtypes,sexes,races,ages)
 ```
-
 
 Make Profiles from the generated Filter Strings
 ```{r}
@@ -611,14 +576,15 @@ for (filter in filterStrings$FilterString){
 
 
 ```{r}
+
 singleFilterSet <- function(cancer=NA, cancer_subtype=NA, sex=NA, race=NA, age= NA) {
   result = ""
   if (!is.na(cancer)) result <- paste(result, "CANCER_TYPE == '", cancer, "'", sep = "")
   if (!is.na(cancer_subtype)) result <- paste(result, ", CANCER_TYPE_DETAILED == '", cancer_subtype, "'", sep = "")
   if (!is.na(sex)) result <- paste(result, ", SEX == '", sex, "'", sep = "")  
   if (!is.na(race)) result <- paste(result, ", PRIMARY_RACE == '", race, "'", sep = "")
-  if (!is.na(age)) result <- paste(result, ", AGE_AT_SEQ_REPORT >= ", age[1], sep = "")
-  if (!is.na(age)) result <- paste(result, ", AGE_AT_SEQ_REPORT < ", age[2], sep = "")
+  if (!is.na(age)) result <- paste(result, ", AGE_AT_SEQ_REPORT >= ", age[1], ", AGE_AT_SEQ_REPORT < ", age[2], sep = "")
+  #if (!is.na(age)) result <- paste(result, ", AGE_AT_SEQ_REPORT < ", age[2], sep = "")
   result
 }
 
@@ -637,9 +603,251 @@ for (cancer in cancer_types){
   name <- gsub(" ","",name)
   subtypes <- summary(factor(t$CANCER_TYPE_DETAILED))
   #print(class(name))
-  print(cancer)
+  #print(cancer)
   
-  cancerPairedWithSubtypes[[name]] <- subtypes[subtypes >25]
+  cancerPairedWithSubtypes[[cancer]] <- subtypes[subtypes >25]
 
+}
+```
+
+
+```{r}
+#testing iterating through hash map
+
+for (cancer in cancer_types){
+  print(cancer)
+ 
+  #print(rownames(as.matrix(cancerPairedWithSubtypes[[cancer]])))
+  for (i in  1:length(cancerPairedWithSubtypes[[cancer]])){
+    cancer_subtype <- rownames(as.matrix(cancerPairedWithSubtypes[[cancer]]))[i]
+    print(cancer_subtype)
+  }
+  
+}
+```
+
+
+
+
+
+
+
+
+
+--------------------Keep This function at the end of the pipeline------It's long---------
+
+```{r}
+
+filterStrings <- data.frame(ID= c(1:15000),
+                 FilterString = c(""))
+generateAllFilters <- function(cancers=NA, cancer_subtypes=NA, sexes=NA, races=NA, ages= NA){
+  if (is.na(cancer)){
+    print("ERROR: Must input a vector of cancer types")
+    return(NA)
+  }
+  results <- c()
+  #results <- append(results, generateTier1Filters(cancers))
+  results <- append(results, generateTier2Filters(cancers, cancer_subtypes))
+
+  results <- append(results, generateTier3Filters(cancers, cancer_subtypes,sexes,races,ages))
+ 
+  results <- append(results, generateTier4Filters(cancers, cancer_subtypes,sexes,races,ages))
+  
+  results <- append(results, generateTier5Filters(cancers, cancer_subtypes,sexes,races,ages))
+  print(length(results))
+  return(results)
+}
+```
+  
+  
+  
+  --------------------------------Tier 1---Least Specific, only sort by major cancer type----------------
+```{r}  
+generateTier1Filters <- function(cancers){  
+  results<-as.character(sapply(cancers,singleFilterSet))
+  return(results)
+}
+```
+
+
+  --------------------------------Tier 2---Sort with 2 filters--------------------------------------------
+```{r}
+generateTier2Filters <- function(cancers=NA, cancer_subtypes=NA,sexes=NA,races=NA,ages=NA){
+  results <- c()
+  if (!is.na(cancer_subtypes)){
+    for (cancer in cancers){
+      for (i in  1:length(cancer_subtypes[[cancer]])){
+        cancer_subtype <- rownames(as.matrix(cancer_subtypes[[cancer]]))[i]
+        results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype))
+      }
+    }
+  }
+  if (!is.na(sexes)){
+    for (cancer in cancers){
+      for (sex in sexes){
+        results <- append(results,singleFilterSet(cancer,sex=sex))
+      }
+    }
+  }  
+  
+  if (!is.na(races)){
+    for (cancer in cancers){
+      for (race in races){
+        results <- append(results,singleFilterSet(cancer,race = race))
+      }
+    }
+  }
+  if (!is.na(ages)){
+    for (cancer in cancers){
+      for (age in ages){
+        results <- append(results,singleFilterSet(cancer,age = age))
+      }
+    }
+  }
+  return(results)
+}
+```
+  
+  
+  ----------------------------------Tier 3---Sort with 3 filters----------------------------------------
+```{r}
+generateTier3Filters <- function(cancers, cancer_subtypes,sexes,races,ages){
+  results <- c()
+  if (!is.na(cancer_subtypes) & (!is.na(sexes))){
+    for (cancer in cancers){
+      for (i in  1:length(cancer_subtypes[[cancer]])){
+        cancer_subtype <- rownames(as.matrix(cancer_subtypes[[cancer]]))[i]
+        for (sex in sexes){
+          results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype,sex = sex))
+        }
+      }
+    }
+  }
+  if (!is.na(cancer_subtypes) & (!is.na(races))){
+    for (cancer in cancers){
+      for (i in  1:length(cancer_subtypes[[cancer]])){
+        cancer_subtype <- rownames(as.matrix(cancer_subtypes[[cancer]]))[i]
+        for (race in races){
+          results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype,race = race))
+        }
+      }
+    }
+  }
+  if (!is.na(cancer_subtypes) & (!is.na(ages))){
+    for (cancer in cancers){
+      for (i in  1:length(cancer_subtypes[[cancer]])){
+        cancer_subtype <- rownames(as.matrix(cancer_subtypes[[cancer]]))[i]
+        for (age in ages){
+          results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype,age = age))
+        }
+      }
+    }
+  }
+  if (!is.na(sexes) & (!is.na(races))){
+    for (cancer in cancers){
+      for (sex in sexes){
+        for (race in races){
+          results <- append(results,singleFilterSet(cancer,sex=sex,race = race))
+        }
+      }
+    }
+  }
+  if (!is.na(sexes) & (!is.na(ages))){
+    for (cancer in cancers){
+      for (sex in sexes){
+        for (age in ages){
+          results <- append(results,singleFilterSet(cancer,sex = sex,age = age))
+        }
+      }
+    }
+  }
+  if (!is.na(races) & (!is.na(ages))){
+    for (cancer in cancers){
+      for (race in races){
+        for (age in ages){
+          results <- append(results,singleFilterSet(cancer,race = race,age = age))
+        }
+      }
+    }
+  } 
+  return(results) 
+}
+```
+  
+  
+  -----------------------------------Tier 4---Sort with 4 filters-----------------------------------------
+```{r}  
+generateTier4Filters <- function(cancers, cancer_subtypes,sexes,races,ages){
+  results <- c()
+  if (!is.na(cancer_subtypes) & (!is.na(sexes)) & (!is.na(races))){
+    for (cancer in cancers){
+      for (i in  1:length(cancer_subtypes[[cancer]])){
+        cancer_subtype <- rownames(as.matrix(cancer_subtypes[[cancer]]))[i]
+        for (sex in sexes){
+          for (race in races){
+            results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype,sex = sex, race = race))
+          }
+        }
+      }
+    }
+  }
+  if (!is.na(cancer_subtypes) & (!is.na(sexes)) & (!is.na(ages))){
+    for (cancer in cancers){
+      for (i in  1:length(cancer_subtypes[[cancer]])){
+        cancer_subtype <- rownames(as.matrix(cancer_subtypes[[cancer]]))[i]
+        for (sex in sexes){
+          for (age in ages){
+            results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype,sex = sex, age = age))
+          }
+        }
+      }
+    }
+  }
+  if (!is.na(cancer_subtypes) & (!is.na(races)) & (!is.na(ages))){
+    for (cancer in cancers){
+      for (i in  1:length(cancer_subtypes[[cancer]])){
+        cancer_subtype <- rownames(as.matrix(cancer_subtypes[[cancer]]))[i]
+        for (race in races){
+          for (age in ages){
+            results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype,race = race, age = age))
+          }
+        }
+      }
+    }
+  }
+  if (!is.na(races) & (!is.na(sexes)) & (!is.na(ages))){
+    for (cancer in cancers){
+      for (race in races){
+        for (sex in sexes){
+          for (age in ages){
+            results <- append(results,singleFilterSet(cancer,sex = sex,race = race, age = age))
+          }
+        }
+      }
+    }
+  }
+  return(results) 
+}
+```
+
+  -------------------------------------------Tier 5---Sort with all 5 filters----------------------------------
+```{r}
+generateTier5Filters <- function(cancers, cancer_subtypes,sexes,races,ages){
+  results <- c()
+  if (!is.na(cancer_subtypes) & (!is.na(sexes)) & (!is.na(races)) & (!is.na(ages))){
+    for (cancer in cancers){
+      for (i in  1:length(cancer_subtypes[[cancer]])){
+        cancer_subtype <- rownames(as.matrix(cancer_subtypes[[cancer]]))[i]
+        for (sex in sexes){
+          for (race in races){
+            for (age in ages){
+            results <- append(results,singleFilterSet(cancer,cancer_subtype = cancer_subtype,sex = sex, race = race,age = age))
+            }
+          }
+        }
+      }
+    }
+  }
+  return(results)
 }
 ```
