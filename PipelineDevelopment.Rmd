@@ -392,7 +392,7 @@ generateTumourDrugMatrix <- function(subsetprofile.df, drugprofile.df, cnlevels)
 ```{r}
 
 ResultsMatrix <- generateTumourDrugMatrix(genie.subsets2060.cn.profiles, gdsc.subsets.cn.profiles, c(-2,2))
-
+ResultsMatrix <- readRDS("allTestResults.rds")
 ```
 
 Plot our heat map
@@ -406,7 +406,11 @@ ggplot(ResultsMatrix.m, aes(DRUG_ID, FILTER_ID)) + geom_tile(aes(fill=SCORE)) + 
 
 ```
 
-
+Plot Histogram of top 50 matches
+```{r}
+histogramResults <- arrange(ResultsMatrix.m, SCORE)[1:50,]
+ggplot(data = histogramResults, aes(DRUG_ID, fill = "red")) + geom_bar() + guides(fill = FALSE)
+```
 
 ------------------Subtyping GENIE ----------------------
 ```{r}
