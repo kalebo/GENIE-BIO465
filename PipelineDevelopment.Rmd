@@ -23,8 +23,6 @@ Load all the data we want to work with.
 genie.filtered.cn <- readRDS("genie-filtered-cn.rds")
 gdsc.filtered.cn <- readRDS("gdsc-filtered-cn.rds")
 gdsc.filtered.cn.t <- readRDS("gdsc-filtered-cn-t.rds")
-DrugProfileTable <- readRDS("Drug-Profile-Table.rds")
-GenieSubsetsTable <- readRDS("genie.subsets.cn.profiles.rds")
 
 celline.to.cosmicid <- readRDS("gdsc-cellline-to-cosmic-id.rds")
 screeened.compounds <- readRDS("screened-compounds.rds")
@@ -279,7 +277,7 @@ makeDrugCNProfileTable <- function(cnlevels, drugIDs, threshold){
   {
     for(copyLevel in cnlevels)
     {
-    drug.experiments <- filter(dose.response, DRUG_ID == drugID, LN_IC50 < threshold)
+    drug.experiments <- filter(creamTestDrugs, DRUG_ID == drugID, LN_IC50 < threshold)
     records <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
     profile <- mkProfile(records, copyLevel)
     gdsc.drug.cn.profile <- rbind(gdsc.drug.cn.profile, c(drugID, copyLevel, unlist(profile)[-1]))
@@ -383,17 +381,26 @@ rankDrugsBySubset <- function(subsetid, cnlevels) {
 }
 
 generateTumourDrugMatrix <- function(subsetprofile.df, drugprofile.df, cnlevels) {
-  
-  for (drugprofile in drugprofile.df$DRUG_ID){
-    for (subsetprofile in subsetprofile.df$FILTER_ID){
-
+  resultsTable <- as.data.frame(matrix(ncol = length(unique(drugprofile.df$DRUG_ID)), nrow = 0))
+  for (subsetprofile in unique(subsetprofile.df$FILTER_ID)){
+        cancerSubset_Row <- vector(mode = 'double')
+    for (drugprofile in unique(drugprofile.df$DRUG_ID)){
+      distance <- getTumourDrugDist(subsetprofile, subsetprofile.df, drugprofile, drugprofile.df, cnlevels)
+      cancerSubset_Row <- append(cancerSubset_Row, distance)
     }
+    resultsTable <- rbind(resultsTable, cancerSubset_Row)
   }
+  colnames(resultsTable) <- unlist(unique(drugprofile.df$DRUG_ID))
+  rownames(resultsTable) <- unlist(unique(subsetprofile.df$FILTER_ID))
+  return (resultsTable)
 }
 
 ```
 
-
+```{r}
+genie.test <- filter(genie.subsets.cn.profiles, CN_LEVEL != 0)
+testResult <- generateTumourDrugMatrix(genie.test[1:4,], gdsc.subsets.cn.profiles, c(-2,2))
+```
 
 
 
