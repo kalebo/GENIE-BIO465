@@ -390,8 +390,18 @@ generateTumourDrugMatrix <- function(subsetprofile.df, drugprofile.df, cnlevels)
 
 ```{r}
 
-testResult <- generateTumourDrugMatrix(genie.subsets2060.cn.profiles, gdsc.subsets.cn.profiles, c(-2,2))
+ResultsMatrix <- generateTumourDrugMatrix(genie.subsets2060.cn.profiles, gdsc.subsets.cn.profiles, c(-2,2))
 
+```
+
+Plot our heat map
+```{r}
+ResultsMatrix <- setDT(as.data.frame(testResult), keep.rownames = TRUE)[]
+colnames(ResultsMatrix)[1]<- "FILTER_ID"
+
+ResultsMatrix.m <- melt(ResultsMatrix)
+colnames(ResultsMatrix.m) <- c("FILTER_ID", "DRUG_ID", "SCORE")
+ggplot(ResultsMatrix.m, aes(DRUG_ID, FILTER_ID)) + geom_tile(aes(fill=SCORE)) + scale_fill_gradientn(colours = rainbow(7)) + theme(axis.text.x=element_text(angle = 45, hjust = .9, vjust = 1)) + labs(title="Drug CNV Score Matrix", x="Drug ID", y="Subset ID", key="Score")
 ```
 
 
