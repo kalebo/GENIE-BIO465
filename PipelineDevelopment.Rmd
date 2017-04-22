@@ -36,9 +36,9 @@ genie.clin <- readRDS("genie-clin.rds")
 intersecting.genes <- readRDS("intersecting-genes.rds")
 genie.filtered.cnclin <- readRDS("genie-filtered-cn-clin.rds")
 
-genie.subsets.cn.profiles <- readRDS("genie.subsets.cn.profiles.rds")
+genie.subsets.cn.profiles.old <- readRDS("genie.subsets.cn.profiles.rds")
 gdsc.subsets.cn.profiles <- readRDS("Drug-Profile-Table.rds")
-genie.subsets2060.cn.profiles <- readRDS("latest.genie.subsets.cn.profile.rds")
+genie.subsets2060.cn.profiles <- readRDS("latest.genie.subset.cn.profiles.rds")
 ```
 
 Make a tree map breakdown of cancer and cancer sub-type.
@@ -300,24 +300,7 @@ gdsc.subsets.cn.profiles <- makeDrugCNProfileTable(c(-2, -1, 1, 2), testableDrug
 ```
 
 
-Function to generate the genie subsets as well as generate the CN Profiles
-```{r}
-makeGenieSubsetProfile <- function(filterString, cnlevel){
-  # create entire filter command in one string
-  filterString1 <- paste('filter(genie.clin,',filterString,")")  
-  # run the filter command
-  subsetClinical <- eval(parse(text=filterString1))
-  records <- filter(genie.filtered.cn.t, SAMPLE_ID %in% subsetClinical$SAMPLE_ID)
-  #only subsets with more than 100 samples are valid
-  if (length(records)){
-    return(NA)
-  }else{
-  #generate profile and return it
-    return(mkProfile(records, cnlevel))
-  }
-}
 
-```
 
 
 ```{r}
@@ -406,8 +389,9 @@ generateTumourDrugMatrix <- function(subsetprofile.df, drugprofile.df, cnlevels)
 ```
 
 ```{r}
-genie.test <- filter(genie.subsets.cn.profiles, CN_LEVEL != 0)
-testResult <- generateTumourDrugMatrix(genie.test[1:4,], gdsc.subsets.cn.profiles, c(-2,2))
+
+testResult <- generateTumourDrugMatrix(genie.subsets2060.cn.profiles, gdsc.subsets.cn.profiles, c(-2,2))
+
 ```
 
 
@@ -459,8 +443,6 @@ makeGenieSubsetProfile <- function(filterString, cnlevel){
     return(mkProfile(records, cnlevel))
   }
 }
-
-
 ```
 
 Make Profiles from the generated Filter Strings
