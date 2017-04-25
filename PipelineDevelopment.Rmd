@@ -36,6 +36,7 @@ genie.clin <- readRDS("genie-clin.rds")
 intersecting.genes <- readRDS("intersecting-genes.rds")
 genie.filtered.cnclin <- readRDS("genie-filtered-cn-clin.rds")
 
+
 genie.subsets.cn.profiles.old <- readRDS("genie.subsets.cn.profiles.rds")
 gdsc.subsets.cn.profiles <- readRDS("Drug-Profile-Table.rds")
 genie.subsets2060.cn.profiles <- readRDS("latest.genie.subset.cn.profiles.rds")
@@ -391,7 +392,7 @@ generateTumourDrugMatrix <- function(subsetprofile.df, drugprofile.df, cnlevels)
 ```{r}
 
 ResultsMatrix <- generateTumourDrugMatrix(genie.subsets2060.cn.profiles, gdsc.subsets.cn.profiles, c(-2,2))
-
+ResultsMatrix <- readRDS("allTestResults.rds")
 ```
 
 Plot our heat map
@@ -402,9 +403,14 @@ colnames(ResultsMatrix)[1]<- "FILTER_ID"
 ResultsMatrix.m <- melt(ResultsMatrix)
 colnames(ResultsMatrix.m) <- c("FILTER_ID", "DRUG_ID", "SCORE")
 ggplot(ResultsMatrix.m, aes(DRUG_ID, FILTER_ID)) + geom_tile(aes(fill=SCORE)) + scale_fill_gradientn(colours = rainbow(7)) + theme(axis.text.x=element_text(angle = 45, hjust = .9, vjust = 1)) + labs(title="Drug CNV Score Matrix", x="Drug ID", y="Subset ID", key="Score")
+
 ```
 
-
+Plot Histogram of top 50 matches
+```{r}
+histogramResults <- arrange(ResultsMatrix.m, SCORE)[1:50,]
+ggplot(data = histogramResults, aes(DRUG_ID, fill = "red")) + geom_bar() + guides(fill = FALSE)
+```
 
 ------------------Subtyping GENIE ----------------------
 ```{r}
