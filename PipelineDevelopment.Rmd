@@ -1,22 +1,22 @@
 ---
 title: "PipelineDevelopment"
-author: "Kaleb Olson"
+author: "Kaleb Olson, Richard Olpin, Jared Nielsen"
 date: "April 13, 2017"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(ggplot2)
-library(viridis)
-library(dplyr)
-library(reshape2)
-library(magrittr)
-library(readr)
-library(synapseClient)
-library(doParallel)
-library(tidyverse)
-library(data.table)
+suppressWarnings(suppressPackageStartupMessages(library(ggplot2)))
+suppressWarnings(suppressPackageStartupMessages(library(viridis)))
+suppressWarnings(suppressPackageStartupMessages(library(dplyr)))
+suppressWarnings(suppressPackageStartupMessages(library(reshape2)))
+suppressWarnings(suppressPackageStartupMessages(library(magrittr)))
+suppressWarnings(suppressPackageStartupMessages(library(readr)))
+suppressWarnings(suppressPackageStartupMessages(library(synapseClient)))
+suppressWarnings(suppressPackageStartupMessages(library(doParallel)))
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(data.table)))
 ```
 
 If you have a synapse log in, you run this cell and download the raw data files from GENIE.
