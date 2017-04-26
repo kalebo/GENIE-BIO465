@@ -83,8 +83,9 @@ colnames(genie.filtered.cn.t)[1] <- "SAMPLE_ID"
 Generate of all our parameter vectors and lists to run through our filter string generation pipeline to create many subsets of the genie database.
 ```{r}
 # grab the cancer types
+genie.cancer.types <- as.data.frame(summary(factor(genie.clin$CANCER_TYPE)))
 genie.cancer.types <- setDT(genie.cancer.types,keep.rownames = TRUE)[]
-colnames(genie.cancer.types)[2] <- "Count"
+colnames(genie.cancer.types) <- c("CANCER_TYPE","Count")
 # only grab those with over 150 records total before any filtering
 cancer_types <- filter(genie.cancer.types, Count > 150) %>% arrange(desc(Count))
 cancer_types <- c(cancer_types[,1])
@@ -158,8 +159,10 @@ makeFilters <- function(cancers = NA, cancer_subtypes=NA, sexes = NA, races = NA
 ```
 Generate our filter Strings based on the parameters we defined above
 ```{r}
-allFilters <- makeFilters(cancer_types,cancerPairedWithSubtypes,sexes,races,ages)
-head(allFilters)
+# Here is how wer generate the filters but it takes 30-60 seconds to execute
+#allFilters <- makeFilters(cancer_types,cancerPairedWithSubtypes,sexes,races,ages)
+
+allFilters <- readRDS("allFilters.rds")
 ```
 
 Function to generate the genie subsets as well as generate the CN Profiles. It makes the subset based on a filter String generated elsewhere. The filter String contains the Cancer type, subtype, and any sex, age or race filter. It gets prepended with the necessary commands to run in an eval expression. The cn level is one of the five discrete copy levels (-2,-1,0,1,2) which is passed inot a function that builds a propotional profile on that copy level.
@@ -208,13 +211,6 @@ makeGenieProfileTable <- function(cnlevels,filtersDF){
 }
 ```
 
-
-Command we ran to generate our genie profile table
-```{r}
-genie.subset.cn.profiles <- makeGenieProfileTable(cnlevels, allFilters)
-
-head(genie.subset.cn.profiles)
-```
 
 
 
@@ -403,6 +399,10 @@ LN_AUC_filtered_Count <- dose.response %>% filter(LN_IC50 < -2, AUC > .5) %>% nr
 AUC_Count <- LN_Filtered_Count - LN_AUC_filtered_Count
 AUC_Count
 #filter(strongestDrugs, stronge)
+
+
+# here is a filterd Screended.compounds of the drugs we test
+drugsTested <- filter(Screened_Compounds,Screened_Compounds$`Drug ID` %in% testableDrugs$DRUG_ID)
 ```
 
 
@@ -432,7 +432,12 @@ Generate GDSC drug profile table
 gdsc.subsets.cn.profiles <- makeDrugCNProfileTable(c(-2, -1, 1, 2), testableDrugs$DRUG_ID, -2)
 ```
 
+Command we ran to generate our genie profile table
+```{r}
+genie.subset.cn.profiles <- makeGenieProfileTable(cnlevels, allFilters)
 
+head(genie.subset.cn.profiles)
+```
 
 
 
