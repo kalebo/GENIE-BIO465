@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="514px"
+   height="531px"
+   version="1.1"
+   style="background-color: rgb(255, 255, 255);"
+   id="svg4136"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="bioflow.svg"
+   inkscape:export-filename="/home/kalebo/repos/GENIE-BIO465/bioflow.png"
+   inkscape:export-xdpi="223.32014"
+   inkscape:export-ydpi="223.32014">
+  <metadata
+     id="metadata4290">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="752"
+     id="namedview4288"
+     showgrid="false"
+     inkscape:zoom="0.96788929"
+     inkscape:cx="183.64298"
+     inkscape:cy="298.35172"
+     inkscape:window-x="0"
+     inkscape:window-y="16"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g4140" />
+  <defs
+     id="defs4138" />
+  <g
+     transform="translate(0.5,0.5)"
+     id="g4140">
+    <path
+       d="m 275,50 0,73.63"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4142"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:10" />
+    <path
+       d="m 275,128.88 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4144"
+       inkscape:connector-curvature="0"
+       style="fill:#000000;stroke:#000000;stroke-miterlimit:10" />
+    <path
+       d="m 274.88,190 0,19.53 0,13.63"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4146"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:10" />
+    <path
+       d="m 274.88,228.41 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4148"
+       inkscape:connector-curvature="0"
+       style="fill:#000000;stroke:#000000;stroke-miterlimit:10" />
+    <path
+       d="m 205,190 28,-60 112,0 -28,60 z"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4150"
+       inkscape:connector-curvature="0"
+       style="fill:#dae8fc;stroke:#6c8ebf;stroke-miterlimit:10" />
+    <path
+       d="M 141.02 42.47 L 207.1 42.47"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       stroke-dasharray="3 3"
+       pointer-events="none"
+       id="path4158" />
+    <path
+       d="M 135.77 42.47 L 142.77 38.97 L 141.02 42.47 L 142.77 45.97 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4160" />
+    <path
+       d="M 212.35 42.47 L 205.35 45.97 L 207.1 42.47 L 205.35 38.97 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4162" />
+    <ellipse
+       cx="75"
+       cy="42"
+       rx="60"
+       ry="40"
+       pointer-events="none"
+       id="ellipse4170"
+       style="fill:#d5e8d4;stroke:#82b366" />
+    <g
+       transform="translate(15.5,20.5)"
+       id="g4172">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125%;font-family:'Bitstream Charter';-inkscape-font-specification:'Bitstream Charter, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="13.5"
+         y="21.015152"
+         id="text4292"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4294"
+           x="13.5"
+           y="21.015152" /></text>
+    </g>
+    <path
+       d="M 333 42 L 396.63 42"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4178" />
+    <path
+       d="M 401.88 42 L 394.88 45.5 L 396.63 42 L 394.88 38.5 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4180" />
+    <ellipse
+       cx="273"
+       cy="42"
+       rx="60"
+       ry="40"
+       fill="#d5e8d4"
+       stroke="#82b366"
+       pointer-events="none"
+       id="ellipse4182" />
+    <path
+       d="M 5 190 L 33 130 L 145 130 L 117 190 Z"
+       fill="#dae8fc"
+       stroke="#6c8ebf"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4190" />
+    <path
+       d="M 74.65 82.47 L 74.83 123.63"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4198" />
+    <path
+       d="M 74.86 128.88 L 71.33 121.9 L 74.83 123.63 L 78.33 121.87 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4200" />
+    <path
+       d="M 74.65 290 L 74.65 309.53 L 74.65 321.98"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4202" />
+    <path
+       d="M 74.65 327.23 L 71.15 320.23 L 74.65 321.98 L 78.15 320.23 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4204" />
+    <path
+       d="M 0 290 L 30 230 L 150 230 L 120 290 Z"
+       fill="#dae8fc"
+       stroke="#6c8ebf"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4206" />
+    <path
+       d="M 74.85 190 L 74.68 223.16"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4214" />
+    <path
+       d="M 74.65 228.41 L 71.19 221.39 L 74.68 223.16 L 78.19 221.43 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4216" />
+    <path
+       d="M 373.47 160.12 L 353.47 160.12 L 339.37 160.12"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4218" />
+    <path
+       d="M 334.12 160.12 L 341.12 156.62 L 339.37 160.12 L 341.12 163.62 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4220" />
+    <path
+       d="M 373 190 L 401 130 L 513 130 L 485 190 Z"
+       fill="#dae8fc"
+       stroke="#6c8ebf"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4222" />
+    <g
+       transform="translate(406.5,138.5)"
+       id="g4224" />
+    <path
+       d="M 443 82 L 443 123.63"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4230" />
+    <path
+       d="M 443 128.88 L 439.5 121.88 L 443 123.63 L 446.5 121.88 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4232" />
+    <path
+       d="M 443 2 L 483 42 L 443 82 L 403 42 Z"
+       fill="#fff2cc"
+       stroke="#d6b656"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4234" />
+    <path
+       d="m 115,358 159.88,-0.24 0,-68.23"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4250"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:10" />
+    <rect
+       x="353"
+       y="430"
+       width="160"
+       height="100"
+       rx="15"
+       ry="15"
+       fill="#f8cecc"
+       stroke="#b85450"
+       pointer-events="none"
+       id="rect4252" />
+    <path
+       d="M 433.47 390 L 433.47 409.53 L 433.47 429.53"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4266" />
+    <path
+       d="M 353 390 L 385 330 L 513 330 L 481 390 Z"
+       fill="#dae8fc"
+       stroke="#6c8ebf"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4268" />
+    <path
+       d="m 2.304255,388 29.708601,-60 118.834404,0 -29.70861,60 z"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4276"
+       inkscape:connector-curvature="0"
+       style="fill:#dae8fc;stroke:#6c8ebf;stroke-width:1;stroke-miterlimit:10" />
+    <path
+       d="M 263 358 L 346.63 358"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4284" />
+    <path
+       d="M 351.88 358 L 344.88 361.5 L 346.63 358 L 344.88 354.5 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4286" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4300"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:'Bitstream Charter';font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Bitstream Charter, Normal';font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"><flowRegion
+         id="flowRegion4302"><rect
+           id="rect4304"
+           width="123.36364"
+           height="65.257576"
+           x="-219.90909"
+           y="138.56061" /></flowRegion><flowPara
+         id="flowPara4306" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4308"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:'Bitstream Charter';font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Bitstream Charter, Normal';font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"><flowRegion
+         id="flowRegion4310"><rect
+           id="rect4312"
+           width="74.196968"
+           height="81.348488"
+           x="-180.57576"
+           y="151.07576" /></flowRegion><flowPara
+         id="flowPara4314" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(319.5303,-72.909091)"><flowRegion
+         id="flowRegion4318"><rect
+           id="rect4320"
+           width="58.999996"
+           height="53.636364"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4322">587 Matching Genes</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4324"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(1.5,3.5)"><flowRegion
+         id="flowRegion4326"><rect
+           id="rect4328"
+           width="92.969696"
+           height="46.484848"
+           x="26.818182"
+           y="21.454546"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4330">GENIE Data</flowPara><flowPara
+         id="flowPara4332">Clinical and CNV</flowPara></flowRoot>    <flowRoot
+       transform="translate(200.10133,-3.7470694)"
+       xml:space="preserve"
+       id="flowRoot4324-4"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
+         id="flowRegion4326-1"><rect
+           id="rect4328-2"
+           width="92.969696"
+           height="46.484848"
+           x="26.818182"
+           y="21.454546"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4332-8">GDSC Data</flowPara><flowPara
+         id="flowPara4363">Drug Response and CNV</flowPara></flowRoot>    <flowRoot
+       transform="translate(370.30209,6.4858851)"
+       xml:space="preserve"
+       id="flowRoot4324-4-3"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
+         id="flowRegion4326-1-8"><rect
+           id="rect4328-2-0"
+           width="92.969696"
+           height="46.484848"
+           x="26.818182"
+           y="21.454546"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4394">Pick drugs </flowPara><flowPara
+         id="flowPara4398">to study</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-6"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(369.86299,213.32544)"><flowRegion
+         id="flowRegion4318-8"><rect
+           id="rect4320-9"
+           width="58.999996"
+           height="53.636364"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4322-0">Compare</flowPara><flowPara
+         id="flowPara4424" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-68"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(205.69632,21.21938)"><flowRegion
+         id="flowRegion4318-7"><rect
+           id="rect4320-90"
+           width="90.28788"
+           height="53.636368"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4244">Filter to matching genes</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-3"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(223.27208,113.55271)"><flowRegion
+         id="flowRegion4318-3"><rect
+           id="rect4320-7"
+           width="58.999996"
+           height="53.636364"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4322-32" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-65"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(203.0145,219.03756)"><flowRegion
+         id="flowRegion4318-2"><rect
+           id="rect4320-6"
+           width="99.227272"
+           height="41.121216"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4322-5">Create profiles for each CN level</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-8"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(412.10542,20.749683)"><flowRegion
+         id="flowRegion4318-79"><rect
+           id="rect4320-60"
+           width="82.242424"
+           height="45.590912"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4551">Translate and filter CNV data</flowPara></flowRoot>    <path
+       inkscape:connector-curvature="0"
+       style="fill:#dae8fc;stroke:#6c8ebf;stroke-miterlimit:10"
+       d="m 197.01515,290.48485 30,-60 120,0 -30,60 z"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4206-1" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-7"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(576.8933,16.537562)"><flowRegion
+         id="flowRegion4318-08"><rect
+           id="rect4320-62"
+           width="92.07576"
+           height="50.954548"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4322-47">Identify most responsive cell lines</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-9"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(570.33269,213.46181)"><flowRegion
+         id="flowRegion4318-39"><rect
+           id="rect4320-2"
+           width="82.242424"
+           height="51.848488"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4322-83">Rank by similarity score</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-0"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(554.49935,326.73453)"><flowRegion
+         id="flowRegion4318-1"><rect
+           id="rect4320-78"
+           width="112.63636"
+           height="68.833336"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4524">Population subsets  that could respond well to drugs given </flowPara><flowPara
+         id="flowPara4530">similar CNV profile.</flowPara></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Bitstream Charter';-inkscape-font-specification:'Bitstream Charter, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="444.68182"
+       y="361.54544"
+       id="text4532"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4534"
+         x="444.68182"
+         y="361.54544" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Bitstream Charter';-inkscape-font-specification:'Bitstream Charter, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="503.68182"
+       y="213.15152"
+       id="text4555"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4557"
+         x="503.68182"
+         y="213.15152" /></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-68-5"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(208.83614,131.0354)"><flowRegion
+         id="flowRegion4318-7-4"><rect
+           id="rect4320-90-9"
+           width="90.28788"
+           height="53.636368"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4583">Subset data</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4316-65-5"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(401.28949,121.19121)"><flowRegion
+         id="flowRegion4318-2-7"><rect
+           id="rect4320-6-4"
+           width="99.227272"
+           height="41.121216"
+           x="-177.89394"
+           y="121.57576"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara4322-5-9">Create profiles for each CN level</flowPara></flowRoot>  </g>
+</svg>
