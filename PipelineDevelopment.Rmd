@@ -21,7 +21,7 @@ suppressWarnings(suppressPackageStartupMessages(library(data.table)))
 
 If you have a synapse log in, you run this cell and download the raw data files from GENIE.
 ```{r}
-synapseLogin()
+#synapseLogin()
 ```
 
 Load all the data we want to work with. Most has been filtered by us and saves having to rerun computationally complex and time consuming commands.
@@ -31,7 +31,7 @@ gdsc.filtered.cn <- readRDS("gdsc-filtered-cn.rds")
 gdsc.filtered.cn.t <- readRDS("gdsc-filtered-cn-t.rds")
 
 celline.to.cosmicid <- readRDS("gdsc-cellline-to-cosmic-id.rds")
-screeened.compounds <- readRDS("screened-compounds.rds")
+screened.compounds <- readRDS("screened-compounds.rds")
 dose.response <- readRDS("dose-response.rds")
 
 genie.clin <- readRDS("genie-clin.rds")
@@ -63,7 +63,9 @@ saveRDS(genie.filtered.cnclin, "genie-filtered-cn-clin.rds")
 ```
 
 
------------------------------------------------------Subtyping GENIE -----------------------------------------------------------
+---------------------------------------Subtyping GENIE-----------------------------------------------------------
+
+
 Do some additional processing of the genie copy level data. We will transpose the matrix to make it tidy. Rename column headers and make the rows into actual values and label the column.
 ```{r}
 #transpose the genie filtered CN df
@@ -222,7 +224,7 @@ gdsc.filtered.cn.t <- as.data.frame(t(gdsc.filtered.cn))[c(-2, -3, -4),]
 
 
 Here we check the gene EFGR (row number 138 in each dataset because we ordered genes alphabetically) to check that we get a comparable distribution of cnv values. This depends on an accurate translation of cnv data from gdsc style to genie style. The EFGR gene can be considered as a baseline because ...
-```{r}
+```
 gdsc.efgr <- table(sapply( gdsc.filtered.cn[138, 5:ncol(gdsc.filtered.cn)],  translate))
 genie.efgr <- table(unlist(genie.filtered.cn[138, 2:ncol(genie.filtered.cn) ]))
 sapply(gdsc.efgr, function(x) x/ncol(gdsc.filtered.cn))
@@ -230,7 +232,7 @@ sapply(genie.efgr, function(x) x/ncol(genie.filtered.cn))
 
 ```
 ERBB2
-```{r}
+```
 gdsc.efgr <- table(sapply( gdsc.filtered.cn[150, 5:ncol(gdsc.filtered.cn)],  translate))
 genie.efgr <- table(unlist(genie.filtered.cn[150, 2:ncol(genie.filtered.cn) ]))
 sapply(gdsc.efgr, function(x) x/ncol(gdsc.filtered.cn))
@@ -239,7 +241,7 @@ sapply(genie.efgr, function(x) x/ncol(genie.filtered.cn))
 ```
 
 Question: how many times does max not equal min in the unconverted GDSC data?
-```{r}
+```
 maxeqmin <- function(x) {
   max_r <- substr(x, 1,1)
   min_r <- substr(x, 3,3)
@@ -252,7 +254,7 @@ table(tout)
 
 ```
 Question: how many times do we find that if the two don't match that the max is greater than 8
-```{r}
+```
 maxneandgt8 <- function(x) {
   quad <- unlist(strsplit(x, ","))
   max_r <- quad[1]
@@ -298,19 +300,6 @@ gdsc.cn.table <- as.data.frame(table(gdsc.filtered.cn.bettertrans))
 colnames(gdsc.cn.table) <- c("cn", "freq")
 ```
 
-```{r}
-wipenonextr <- function(x){
-  if (x != -2 || x != 2) {
-    0
-  }
-  else {
-    x
-  }
-}
-
-sum(genie.filtered.cn[,2:ncol(genie.filtered.cn)] == -2) +
-sum(genie.filtered.cn[,2:ncol(genie.filtered.cn)] == 2)
-```
 
 Make a plot of the distribution:
 ```{r}
@@ -318,27 +307,30 @@ genie.cn.table <- as.data.frame(table(unlist(genie.filtered.cn[,2:ncol(genie.fil
 colnames(genie.cn.table) <- c("cn", "freq")
 ```
 
-```{r}
+
+PLot the Distribution of both GENIE and GDSC CN Levels
+```
 library(scales)
 ggplot(genie.cn.table[-2,]) + geom_col(aes(x = cn, y = freq), fill="#B22222") + scale_y_log10( breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x))) + labs(x="Discrete CN Level", y ="Count", title="GENIE Copy Number Distribution")
 
 ggplot(gdsc.cn.table) + geom_col(aes(x = cn, y = freq), fill="#B22222") + scale_y_log10( breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x))) + labs(x="Discrete CN Level", y ="Count", title="Translated GDSC Copy Number Distribution")
 ```
 
-
-Now we choose a drug that is has at least one record that is very low IC50. In this case #104. We filter for this drug and any record that is less than our threshold of -2 for IC50
+Generate table of translated GDSC CN values
 ```{r}
 gdsc.filtered.cn.bettertrans.df <- as.data.frame(gdsc.filtered.cn.bettertrans)
 colnames(gdsc.filtered.cn.bettertrans.df) <- unlist(intersecting.genes)
 
-library(data.table)
+
 gdsc.filtered.cn.bettertrans.df <- setDT(gdsc.filtered.cn.bettertrans.df, keep.rownames = TRUE)[]
 colnames(gdsc.filtered.cn.bettertrans.df)[1] <- "COSMIC_ID"
 
 ```
 
+
+Now we choose a drug that is has at least one record that is very low IC50. In this case #104. We filter for this drug and any record that is less than our threshold of -2 for IC50.
 Now we show a trivial example of how we are going to compare profile sets. Note- that we will need to consider the positive 2 and the negative 2 cases individually.
-```{r}
+```
 drug_id = 104
 drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < -2)
 profilein.2 <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
@@ -352,7 +344,7 @@ profile.201 <-  apply(unlist(profilein.1 == 2), 2, function(x) sum(x)/length(x))
 dist(rbind(profile.201, profile.104), method = "euclidian")
 ```
 
-We generalize the above as functions:
+We generalize the above as functions so that we can create profiles for an arbitrary record set and copy levels as well as finding the distance between two subsets
 ```{r}
 colProp <- function(col) {sum(col)/length(col)}
 
@@ -372,7 +364,7 @@ compareDrugs <- function(drug_id1, drug_id2, threshold, cnlevel) {
   mkRecordSet <- function(drug_id, threshold) {
     drug.experiments <- filter(dose.response, DRUG_ID == drug_id, LN_IC50 < threshold)
     records <- filter(gdsc.filtered.cn.bettertrans.df, COSMIC_ID %in% drug.experiments$COSMIC_ID)
-    #assertthat::assert_that(length(records) >= 100)
+    
     records
   }
   
@@ -402,12 +394,11 @@ AUC_Count
 
 
 # here is a filterd Screended.compounds of the drugs we test
-drugsTested <- filter(Screened_Compounds,Screened_Compounds$`Drug ID` %in% testableDrugs$DRUG_ID)
+drugsTested <- filter(screened.compounds,screened.compounds$`Drug ID` %in% testableDrugs$DRUG_ID)
 ```
 
-
+Create GDSC Drug Id CNLevel Profile Table, Parameters = cnLevels v(), drugIds v(), IC_50 threshold
 ```{r}
-# Create GDSC Drug Id CNLevel Profile Table, Parameters = cnLevels v(), drugIds v(), IC_50 threshold
 makeDrugCNProfileTable <- function(cnlevels, drugIDs, threshold){
   headerLine <- c("DRUG_ID", "CN_LEVEL", unlist(intersecting.genes))
   gdsc.drug.cn.profile <- data.frame(matrix(ncol = length(headerLine), nrow = 0))
@@ -432,15 +423,15 @@ Generate GDSC drug profile table
 gdsc.subsets.cn.profiles <- makeDrugCNProfileTable(c(-2, -1, 1, 2), testableDrugs$DRUG_ID, -2)
 ```
 
-Command we ran to generate our genie profile table
+Command we ran to generate our genie profile table. This will take 15-25 minutes to execute so just read the RDS file
 ```{r}
-genie.subset.cn.profiles <- makeGenieProfileTable(cnlevels, allFilters)
+#genie.subset.cn.profiles <- suppressWarnings(makeGenieProfileTable(cnlevels, allFilters))
 
-head(genie.subset.cn.profiles)
+genie.subset.cn.profiles <- readRDS("genie.subsets.cn.profiles.rds")
 ```
 
 
-
+Returns all the records for a drug that the IC_50 < threshold and has >= 100 records
 ```{r}
 
   mkRecordSet <- function(drug_id, threshold) {
@@ -453,7 +444,7 @@ head(genie.subset.cn.profiles)
 ```
 
 Where we checked to see if CDKN2B occurred most frequently as max gene.
-```{r}
+```
 ids <- arrange(dose.response, LN_IC50)$DRUG_ID
 trt<- function(id) {which.max((mkProfile(mkRecordSet(id, 2), -2)))}
 sapply(unlist(ids[1:50]), trt)
@@ -476,20 +467,6 @@ plotDrug <- function(id) {
 }
 ```
 
-```{r}
-
-plotFilteredSubset <- function(id) {
-  # NOT WORKING YET
-  profile <- as.data.frame(filter(genie.subsets.cn.profiles, FILTER_ID == id)[,c(-1, -2)])
-  colnames(profile) <- "SCORE"
-  res <- tibble::rownames_to_column(res, "GENE")
-  
-  name <- "TODO"
-  ggplot(profile, aes(x=GENE, y=SCORE)) + scale_y_log10() + geom_point() + geom_text_repel(data= subset(profile, SCORE > 0.001), aes(label=GENE), size = 3) + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank()) + annotation_logticks(side="l") + labs(title = paste(name ," (", id, ") ", "CNV profile", sep=""))
-}
-
-
-```
 
 Here is the function that will get the distance from each GENIE tumour subset to each GDSC drug subset.
 ```{r}
@@ -526,6 +503,8 @@ generateTumourDrugMatrix <- function(subsetprofile.df, drugprofile.df, cnlevels)
 
 ```
 
+
+Generate our scoring Matrix that scores each pairing by CN similarity 
 ```{r}
 ResultsMatrix <- readRDS("allTestResults.rds")
 
@@ -546,7 +525,7 @@ colnames(ResultsMatrix.m) <- c("FILTER_ID", "DRUG_ID", "SCORE")
 ResultsMatrix60.m <-arrange(ResultsMatrix.m, SCORE)[1:250,]
 #quick function to replace the DRUG ID with its actual name
 drugName <- function(id){
-  select(filter(screeened.compounds,`Drug ID` == id), `Drug Name`)
+  select(filter(screened.compounds,`Drug ID` == id), `Drug Name`)
 }
 
 
@@ -570,7 +549,7 @@ ggplot(Best60Results,
 ```
 
 Plot Histogram of top 50 matches
-```{r}
+```
 histogramResults <- arrange(ResultsMatrix.m, SCORE)[1:60,]
 histogramResults$DRUG_ID<- unlist(sapply(histogramResults$DRUG_ID,drugName))
 ggplot(data = histogramResults, 
@@ -580,4 +559,16 @@ ggplot(data = histogramResults,
        theme(axis.text.x=element_text(angle=45, hjust=1), 
              axis.title = element_text(size = 14),
              plot.title = element_text(hjust = .5, size = 14))
+```
+
+
+Generate top Results Table
+```
+topResultsTable <- Best60Results
+CSPName <- function(id){
+  select(filter(allFilters,ID == id), `FilterString`)
+}
+topResultsTable$FILTER_ID<- unlist(sapply(topResultsTable$FILTER_ID,CSPName))
+colnames(topResultsTable) <- c("FILTER","DrugName","Score")
+topResults <-arrange(topResultsTable, Score)
 ```
